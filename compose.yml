@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  client:
+    extends:
+      file: ./compose.common.yml
+      service: client
+
+  server:
+    extends:
+      file: ./compose.common.yml
+      service: server
+    environment:
+      POSTGRES_PASSWORD: /run/secrets/db_password
+    secrets:
+      - db_password
+
+  database:
+    extends:
+      file: ./compose.common.yml
+      service: database
+    environment:
+      POSTGRES_PASSWORD: /run/secrets/db_password
+    secrets:
+      - db_password
+
+volumes:
+  pg_data:
+    driver: local
+
+secrets:
+  db_password:
+    file: /db/password

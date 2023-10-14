@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  client:
+    extends:
+      file: ./compose.common.yml
+      service: client
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    # volumes?
+
+  server:
+    extends:
+      file: ./compose.common.yml
+      service: server
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    # volumes?
+  
+  database:
+    extends:
+      file: ./compose.common.yml
+      service: database
+
+volumes:
+  pg_data:
+    driver: local
