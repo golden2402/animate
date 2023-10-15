@@ -30,4 +30,4 @@ volumes:
 
 secrets:
   db_password:
-    file: /db/password
+    file: .secrets/db/password

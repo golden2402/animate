@@ -21,7 +21,7 @@ services:
   database:
     image: postgres:16.0-alpine
     ports:
-      - "5432:5432"    
+      - "5440:5432"
     env_file:
       - ./pg/.env
     volumes:
