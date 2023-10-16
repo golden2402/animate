@@ -114,7 +114,7 @@ create table if not exists
     id serial primary key,
     studio_name varchar(80),
     studio_year date_year,
-    studio_blurb varchar(255)
+    studio_blurb varchar(2047)
   );
 
 create table if not exists
@@ -161,3 +161,93 @@ values
   ('lisa@vt.edu', 'lisa', 'password_c'),
   ('hiba@vt.edu', 'hiba', 'password_c'),
   ('rion@vt.edu', 'rion', 'password_c');
+
+insert into
+  anime (title, season_id)
+values
+  ('Anime 1', 1),
+  ('Anime 2', 1),
+  ('Anime 1', 2),
+  ('Anime 2', 2),
+  ('Anime 3', 3),
+  ('Anime 4', 4),
+  ('Anime 4', 1),
+  ('Anime 5', 6),
+  ('Anime 5', 8),
+  ('Anime 6', 5),
+  ('Anime 3', 3),
+  ('Anime 5', 6),
+  ('Anime 10', 7),
+  ('Anime 11', 1),
+  ('Anime 12', 7),
+  ('Anime 16', 2),
+  ('Anime 17', 5),
+  ('Anime 18', 6),
+  ('Anime 19', 8),
+  ('Anime 20', 4);
+
+insert into
+  genre (genre_name)
+values
+  ('Action'),
+  ('Adventure'),
+  ('Avant Garde'),
+  ('Award Winning'),
+  ('Humor'),
+  ('Boys Love'),
+  ('Comedy'),
+  ('Drama'),
+  ('Fantasy'),
+  ('Girls Love'),
+  ('Gourment'),
+  ('Gourmet'),
+  ('Horror'),
+  ('Mystery'),
+  ('Sci-Fi'),
+  ('Romance'),
+  ('Slice of Life'),
+  ('Sports'),
+  ('Supernatural'),
+  ('Suspense'),
+  ('Ecchi'),
+  ('Erotica');
+
+insert into
+  producer (studio_name, studio_year, studio_blurb)
+values
+  ('Pierrot', 1979, 'This is Pierrot'),
+  ('Gonzo', 2000, 'This is Gonzo'),
+  (
+    'Kyoto Animation',
+    1985,
+    'This is Kyoto Animation'
+  ),
+  ('Bones', 1998, 'This is Bones!'),
+  ('Bee Train', 1997, 'This is bee train'),
+  ('Gainex', 1984, 'This is Gainex'),
+  ('JCSTaff', 1986, 'This is JCStaff'),
+  ('Artland', 2010, 'This is Artland'),
+  ('Production IG', 1987, 'This is Production IG'),
+  ('MadHouse', 1972, 'This is MadHouse'),
+  ('Sunrise', 1976, 'This is Sunrise'),
+  (
+    'Sony Pictures Entertainment',
+    1984,
+    'This is Sony'
+  ),
+  ('TV Tokyo', 1964, 'This is TV Tokyo'),
+  ('Aniplex', 1995, 'This is Aniplex'),
+  ('Toei Animation', 1948, 'This is Toei Animation'),
+  ('Studio Ghibli', 1985, 'This is Studio Ghibli'),
+  (
+    'Nippon Animation',
+    1975,
+    'This is Nippon Animation'
+  ),
+  ('Bandai Visual', 1983, 'This is Bandai Visual'),
+  (
+    'Studio Fantasia',
+    1983,
+    'This is Studio Fantasia'
+  ),
+  ('Milky Animation Label', 2020, null);
