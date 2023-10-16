@@ -125,6 +125,39 @@ create table if not exists
     foreign key (producer_id) references producer (id)
   );
 
-insert into season(season_year, season_name)
-values (2022, 'winter'), (2022, 'fall'), (2022, 'spring'), (2022, 'summer'),
-       (2023, 'winter'), (2023, 'fall'), (2023, 'spring'), (2023, 'summer');
+insert into
+  season (season_year, season_name)
+values
+  (2022, 'winter'),
+  (2022, 'fall'),
+  (2022, 'spring'),
+  (2022, 'summer'),
+  (2023, 'winter'),
+  (2023, 'fall'),
+  (2023, 'spring'),
+  (2023, 'summer');
+
+-- spoofed users:
+insert into
+  user_account (email, username, user_password)
+values
+  ('john@vt.edu', 'john', '12345678'),
+  ('jane@vt.edu', 'jane', '12345678'),
+  ('rathi@vt.edu', 'rathi', '12345678'),
+  ('david@vt.edu', 'david', '12345678'),
+  ('joey@vt.edu', 'joey', 'password'),
+  ('will@vt.edu', 'will', 'password'),
+  ('tomas@vt.edu', 'tomas', 'password'),
+  ('maxim@vt.edu', 'maxim', 'password'),
+  ('namita@vt.edu', 'namita', 'password_a'),
+  ('raseen@vt.edu', 'raseen', 'password_a'),
+  ('vineet@vt.edu', 'vineet', 'password_a'),
+  ('anthony@vt.edu', 'anthony', 'password_a'),
+  ('brian@vt.edu', 'brian', 'password_b'),
+  ('tony@vt.edu', 'tony', 'password_b'),
+  ('alex@vt.edu', 'alex', 'password_b'),
+  ('alexander@vt.edu', 'alexander', 'password_b'),
+  ('rich@vt.edu', 'rich', 'password_c'),
+  ('lisa@vt.edu', 'lisa', 'password_c'),
+  ('hiba@vt.edu', 'hiba', 'password_c'),
+  ('rion@vt.edu', 'rion', 'password_c');
