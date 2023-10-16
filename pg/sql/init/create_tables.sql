@@ -124,3 +124,7 @@ create table if not exists
     producer_id serial,
     foreign key (producer_id) references producer (id)
   );
+
+insert into season(season_year, season_name)
+values (2022, 'winter'), (2022, 'fall'), (2022, 'spring'), (2022, 'summer'),
+       (2023, 'winter'), (2023, 'fall'), (2023, 'spring'), (2023, 'summer');
