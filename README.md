@@ -13,10 +13,8 @@ For production environments, the compose files (both development and production)
     ```properties
     PG_USER=postgres
     POSTGRES_DB=animate
-    # only used for development--replaced with a secret in production:
     POSTGRES_PASSWORD=postgres
     ```
-- `.secrets/db/password`&mdash;(production) database admin password
 
 ## Startup
 
