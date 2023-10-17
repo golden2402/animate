@@ -14,9 +14,7 @@ services:
     extends:
       file: ./compose.common.yml
       service: server
-    build:
-      context: ./server
-      dockerfile: Dockerfile.dev
+    # command: TODO
     # volumes?
   
   database:
