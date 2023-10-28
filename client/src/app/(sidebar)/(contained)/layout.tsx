@@ -3,5 +3,9 @@ export default function ContainedPageLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="container mx-auto">{children}</div>;
+  return (
+    <main className="flex-grow">
+      <div className="mx-auto max-w-6xl p-4">{children}</div>
+    </main>
+  );
 }
