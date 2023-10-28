@@ -4,11 +4,16 @@
 
 @layer base {
   .fg {
-    @apply bg-neutral-100 text-neutral-900;
+    @apply bg-neutral-100 text-neutral-700;
   }
 
   .fg-shadow {
-    @apply shadow-md shadow-black/30
+    @apply shadow-md shadow-black/30;
+  }
+
+  .fg-focus {
+    @apply bg-neutral-200 text-neutral-800
+      outline outline-1 outline-black/10;
   }
 }
 
