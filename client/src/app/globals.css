@@ -13,7 +13,7 @@
 
   .fg-focus {
     @apply bg-neutral-200 text-neutral-800
-      outline outline-1 outline-black/10;
+      outline outline-1 outline-black/20;
   }
 }
 
