@@ -38,18 +38,17 @@ async def login_user():
 
 async def try_register(user: UpdateUserAccount):
     # handling anything that could give us DB or Null Errors
-    if ( not user["username"] or not user["user_password"]):
+    if ( not user.username or not user.user_password):
         return ErrorResponseModel("Invalid Credentials", 400, "Username or Password is not properly filled out.")
     
-    if (await does_email_exist(user["email"])):
+    if (await does_email_exist(user.email)):
         return ErrorResponseModel("Invalid Email", 400, "Email Already exist")
 
-    if (await does_username_exist(user["username"])):
+    if (await does_username_exist(user.username)):
         return ErrorResponseModel("Invalid Username", 400, "Username Already exist")
 
     # Now that we have passed checks lets try to register account
-    user["user_password"] = await hash_password(user["user_password"])
-    print(user["user_password"])
+    user.user_password = await hash_password(user.user_password)
 
     try: 
         await create_user_account(user)
@@ -62,24 +61,24 @@ async def try_register(user: UpdateUserAccount):
 
 
 async def try_login(user: UpdateUserAccount):
-    if ( not user["username"] or not user["user_password"] ):
+    if ( not user.username or not user.user_password ):
         return ErrorResponseModel("Invalid Credentials", 400, "Username or Password is not properly filled out.")
     
-    if (not await does_username_exist(user["username"])):
+    if (not await does_username_exist(user.username)):
         return ErrorResponseModel("Invalid Username", 400, "Username Does Not Exist")
     
-    authenticated_user = await get_user_by_credentials(user["username"], user["user_password"])
+    authenticated_user = await get_user_by_credentials(user.username, user.user_password)
 
     if (authenticated_user):
         response = JSONResponse(content="Login Successful")
-        response.set_cookie(key=f"{authenticated_user['id']}", value=create_token(authenticated_user['id']))
+        response.set_cookie(key="authToken", value=create_token(authenticated_user['id']))
         return response
 
 
     return ErrorResponseModel("Login Failed", 400, "Trouble Logging in!")
 
 async def create_user_account(user: UserAccount): 
-    return (await db.run_statements(f"insert into user_account (email, username, user_password, display_name) values ('{user['email']}', '{user['username']}', '{user['user_password']}', '{user['display_name']}')"))
+    return (await db.run_statements(f"insert into user_account (email, username, user_password, display_name) values ('{user.email}', '{user.username}', '{user.user_password}', '{user.display_name}')"))
 
 async def does_username_exist(username: str):
     return (await db.run_statements(f"select * from user_account where username = '{username}'"))[0]

@@ -14,8 +14,8 @@ class UpdateUserAccount(BaseModel):
     username: Optional[str]
     user_password: Optional[str]
     display_name: Optional[str]
-    user_color: Optional[str]
-    blurb: Optional[str]
+    user_color: Optional[str] = None
+    blurb: Optional[str] = None
 
 
     class Config:
