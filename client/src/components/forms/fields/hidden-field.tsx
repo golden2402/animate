@@ -2,10 +2,10 @@
 
 import { InputHTMLAttributes, useState } from "react";
 
-import EyeOffIcon from "@/components/icons/EyeIcon";
+import EyeOffIcon from "@/components/icons/EyeOffIcon";
 import EyeIcon from "@/components/icons/EyeIcon";
 
-export default function PasswordField(
+export default function HiddenField(
   props: InputHTMLAttributes<HTMLInputElement>
 ) {
   // consume certain properties (for discard!) but preserve other props:
@@ -20,7 +20,7 @@ export default function PasswordField(
         autoComplete="current-password"
         {...rest}
       />
-      <button type="button" onClick={() => setShowPassword(!showPassword)}>
+      <button type="button" onClick={() => setShowPassword((value) => !value)}>
         {showPassword ? (
           <EyeOffIcon className="h-5" />
         ) : (

@@ -10,7 +10,7 @@ import required from "@/hooks/validation/validators/required";
 import Field from "@/components/forms/field-wrapper";
 import FieldError from "@/components/forms/field-error";
 
-import PasswordField from "@/components/forms/fields/password-field";
+import HiddenField from "@/components/forms/fields/hidden-field";
 
 export default function LoginForm() {
   const [errorBuilders, errors] = useValidator({
@@ -39,7 +39,7 @@ export default function LoginForm() {
         <FieldError errors={errors.username} />
 
         <Field>
-          <PasswordField
+          <HiddenField
             name="password"
             onChange={handleInput}
             placeholder="Password"
