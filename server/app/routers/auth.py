@@ -1,40 +1,37 @@
-from jwcrypto import jwt, jwk
-from models.user_account_model import ErrorResponseModel, ResponseModel, UserAccount, UpdateUserAccount
+from datetime import datetime, timedelta
+from models.user_account_model import ErrorResponseModel, ResponseModel, UserAccount, UpdateUserAccount, AuthorizedUser
+from jose import JWTError, jwt
+
 import db
 import bcrypt
 
-from fastapi import APIRouter
+from fastapi import APIRouter, status,HTTPException, Request
 from fastapi.responses import JSONResponse
 router = APIRouter()
 
 SALT_ROUNDS = 12
-
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
+#TODO: Move this to env, maybe .secrets?
+SECRET_KEY = "71a339833c93220552562ef61498fe8ab6fdbb8d8447694525dda84bd0602e36"
 
 @router.post("/auth/register")
 async def register_user(user: UpdateUserAccount):
-    # user: UpdateUserAccount = {
-    #     "username": "Joey56",
-    #     "email": "pranky562@gmail.com",
-    #     "user_password": "123456",
-    #     "display_name": "Joey"
-    # }
-
     return await try_register(user)
 
 @router.post("/auth/login")
 async def login_user(user: UpdateUserAccount):
-    # user: UpdateUserAccount = {
-    #     "username": "Joey56",
-    #     "email": "pranky56@gmail.com",
-    #     "user_password": "123456",
-    #     "display_name": "Joey"
-    # }
     return await try_login(user)
 
-@router.post("/auth/logout")
-async def login_user():
-
-    return {"TODO"}
+@router.get("/auth/me")
+async def login_user(user: AuthorizedUser, request: Request):
+    try: 
+        print(request.headers.get("Authorization"))
+        token = request.headers.get("Authorization")
+    except: 
+        return ErrorResponseModel("Invalid Access Token", 401, "Try loggin in again")
+    
+    return await get_current_user(token)
 
 async def try_register(user: UpdateUserAccount):
     # handling anything that could give us DB or Null Errors
@@ -69,13 +66,20 @@ async def try_login(user: UpdateUserAccount):
     
     authenticated_user = await get_user_by_credentials(user.username, user.user_password)
 
+    if not authenticated_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
     if (authenticated_user):
-        response = JSONResponse(content="Login Successful")
-        response.set_cookie(key="authToken", value=create_token(authenticated_user['id']))
-        return response
-
-
-    return ErrorResponseModel("Login Failed", 400, "Trouble Logging in!")
+        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token = create_access_token(
+        data={"sub": user.username}, expires_delta=access_token_expires
+        )
+        return {"access_token": access_token, "token_type": "bearer"}
+    
 
 async def create_user_account(user: UserAccount): 
     return (await db.run_statements(f"insert into user_account (email, username, user_password, display_name) values ('{user.email}', '{user.username}', '{user.user_password}', '{user.display_name}')"))
@@ -85,6 +89,10 @@ async def does_username_exist(username: str):
 
 async def does_email_exist(email: str):
     return (await db.run_statements(f"select * from user_account where email = '{email}'"))[0]
+
+#Retrieving an authenticated user should only be called if JWT was succesffuly decoded.
+async def get_user_by_username(username: str):
+    return (await db.run_statements(f"select * from user_account where username = '{username}'"))[0][0]
 
 async def get_user_by_credentials(username: str, unhashed_password: str):
     print(f"Looking for User with username {username}")
@@ -103,7 +111,6 @@ async def get_user_by_credentials(username: str, unhashed_password: str):
     return None
 
 
-# TODO: Should this function be async?
 async def hash_password(password: str): 
     # convert password str to bytes
     bytes = password.encode('utf-8') 
@@ -120,9 +127,31 @@ def compare_password(password: str, hashed_password: str):
     return  bcrypt.checkpw(encoded_password, encoded_hased_password)
 
 
-def create_token(user_id: str):
-    key = jwk.JWK(generate='oct', size=256)
-    Token = jwt.JWT(header={"alg": "HS256"},
-    claims={"user_id": f"{user_id}"})
-    Token.make_signed_token(key)
-    return Token.serialize()
+def create_access_token(data: dict, expires_delta: timedelta | None = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+async def get_current_user(token: dict):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+        token_data = username
+    except JWTError:
+        raise credentials_exception
+    user = await get_user_by_username(token_data)
+    if user is None:
+        raise credentials_exception
+    return user
