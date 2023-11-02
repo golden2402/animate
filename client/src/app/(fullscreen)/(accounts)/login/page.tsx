@@ -41,8 +41,9 @@ export default function LoginForm() {
         <Field>
           <HiddenField
             name="password"
-            onChange={handleInput}
             placeholder="Password"
+            autoComplete="current-password"
+            onChange={handleInput}
           />
         </Field>
         <FieldError errors={errors.password} />
