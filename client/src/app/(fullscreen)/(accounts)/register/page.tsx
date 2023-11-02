@@ -5,6 +5,7 @@ import { FormEvent } from "react";
 import { useValidator } from "@/hooks/validation";
 
 import required from "@/hooks/validation/validators/required";
+import naiveEmail from "@/hooks/validation/validators/naive-email";
 import { min } from "@/hooks/validation/validators/range";
 
 import Field from "@/components/forms/field-wrapper";
@@ -14,9 +15,13 @@ import HiddenField from "@/components/forms/fields/hidden-field";
 
 export default function RegisterForm() {
   const [errorBuilders, errors] = useValidator({
-    username: [required("Username is required")],
+    email: [
+      required("Email is required!"),
+      naiveEmail("Email is of invalid format!")
+    ],
+    username: [required("Username is required!")],
     password: [
-      required("Password is required"),
+      required("Password is required!"),
       min(6, "Password must be at least 6 characters.")
     ]
   });
@@ -31,6 +36,16 @@ export default function RegisterForm() {
       <h2 className="text-xl font-medium">Sign Up</h2>
 
       <form className="flex flex-col gap-2">
+        <Field>
+          <input
+            name="email"
+            autoComplete="email"
+            placeholder="Email"
+            onChange={handleInput}
+          />
+        </Field>
+        <FieldError errors={errors.email} />
+
         <Field>
           <input
             name="username"
