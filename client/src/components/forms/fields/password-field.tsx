@@ -16,7 +16,6 @@ export default function PasswordField(
   return (
     <div className="flex justify-between gap-2">
       <input
-        className="w-full bg-transparent"
         type={!showPassword ? "password" : "text"}
         autoComplete="current-password"
         {...rest}

@@ -7,8 +7,10 @@ import { FormEvent } from "react";
 import { useValidator } from "@/hooks/validation";
 import required from "@/hooks/validation/validators/required";
 
-import PasswordField from "@/components/forms/password-field";
+import Field from "@/components/forms/field-wrapper";
 import FieldError from "@/components/forms/field-error";
+
+import PasswordField from "@/components/forms/fields/password-field";
 
 export default function LoginForm() {
   const [errorBuilders, errors] = useValidator({
@@ -26,23 +28,23 @@ export default function LoginForm() {
       <h2 className="text-xl font-medium">Login</h2>
 
       <form className="flex flex-col gap-2">
-        <input
-          className="p-2 w-full fg fg-outline rounded text-sm"
-          name="username"
-          type="text"
-          autoComplete="username"
-          placeholder="Username"
-          onChange={handleInput}
-        />
+        <Field>
+          <input
+            name="username"
+            autoComplete="username"
+            placeholder="Username"
+            onChange={handleInput}
+          />
+        </Field>
         <FieldError errors={errors.username} />
 
-        <div className="p-2 w-full fg fg-outline rounded text-sm">
+        <Field>
           <PasswordField
             name="password"
             onChange={handleInput}
             placeholder="Password"
           />
-        </div>
+        </Field>
         <FieldError errors={errors.password} />
       </form>
 

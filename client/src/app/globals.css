@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  input {
+    @apply w-full bg-transparent;
+  }
+
   .fg {
     @apply bg-neutral-100 text-neutral-700;
   }
