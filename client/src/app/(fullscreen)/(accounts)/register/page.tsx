@@ -1,3 +1,72 @@
+"use client";
+
+import { FormEvent, useState } from "react";
+
+import { useValidator } from "@/hooks/validation";
+import required from "@/hooks/validation/validators/required";
+
+import Field from "@/components/forms/field-wrapper";
+import FieldError from "@/components/forms/field-error";
+
+import HiddenField from "@/components/forms/fields/hidden-field";
+
 export default function RegisterForm() {
-  return <></>;
+  const [password, setPassword] = useState<string>();
+
+  const [errorBuilders, errors] = useValidator({
+    username: [required("Username is required")],
+    password: [required("Password is required")],
+    passwordConfirmation: [
+      (value: string) => {
+        return value.trim() !== password?.trim() && "Passwords must match.";
+      }
+    ]
+  });
+
+  function handleInput(event: FormEvent<HTMLInputElement>) {
+    const { name: field, value } = event.currentTarget;
+    errorBuilders[field](value);
+  }
+
+  function handlePassword(event: FormEvent<HTMLInputElement>) {
+    setPassword(event.currentTarget.value);
+    handleInput(event);
+  }
+
+  return (
+    <section className="flex flex-col gap-4 p-4">
+      <h2 className="text-xl font-medium">Sign Up</h2>
+
+      <form className="flex flex-col gap-2">
+        <Field>
+          <input
+            name="username"
+            autoComplete="username"
+            placeholder="Username"
+            onChange={handleInput}
+          />
+        </Field>
+        <FieldError errors={errors.username} />
+
+        <Field>
+          <HiddenField
+            name="password"
+            autoComplete="password"
+            placeholder="Password"
+            onChange={handlePassword}
+          />
+        </Field>
+        <FieldError errors={errors.password} />
+
+        <Field>
+          <HiddenField
+            name="passwordConfirmation"
+            placeholder="Confirm Password"
+            onChange={handleInput}
+          />
+        </Field>
+        <FieldError errors={errors.passwordConfirmation} />
+      </form>
+    </section>
+  );
 }
