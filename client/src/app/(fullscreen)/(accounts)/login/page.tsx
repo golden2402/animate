@@ -5,7 +5,9 @@ import Link from "next/link";
 import { FormEvent } from "react";
 
 import { useValidator } from "@/hooks/validation";
+
 import required from "@/hooks/validation/validators/required";
+import { min } from "@/hooks/validation/validators/range";
 
 import Field from "@/components/forms/field-wrapper";
 import FieldError from "@/components/forms/field-error";
@@ -15,7 +17,10 @@ import HiddenField from "@/components/forms/fields/hidden-field";
 export default function LoginForm() {
   const [errorBuilders, errors] = useValidator({
     username: [required("Username is required!")],
-    password: [required("Password is required!")]
+    password: [
+      required("Password is required!"),
+      min(6, "Password must be at least 6 characters.")
+    ]
   });
 
   function handleInput(event: FormEvent<HTMLInputElement>) {
