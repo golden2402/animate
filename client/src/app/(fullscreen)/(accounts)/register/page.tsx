@@ -9,7 +9,8 @@ import naiveEmail from "@/hooks/validation/validators/naive-email";
 import { min } from "@/hooks/validation/validators/range";
 
 import Field from "@/components/forms/field-wrapper";
-import FieldError from "@/components/forms/field-error";
+import FieldErrorList from "@/components/forms/field-error-list";
+import FieldErrorPair from "@/components/forms/field-error-pair";
 
 import HiddenField from "@/components/forms/fields/hidden-field";
 
@@ -35,36 +36,42 @@ export default function RegisterForm() {
     <section className="flex flex-col gap-4 p-4">
       <h2 className="text-xl font-medium">Sign Up</h2>
 
-      <form className="flex flex-col gap-2">
-        <Field>
-          <input
-            name="email"
-            autoComplete="email"
-            placeholder="Email"
-            onChange={handleInput}
-          />
-        </Field>
-        <FieldError errors={errors.email} />
+      <form className="flex flex-col gap-4">
+        <FieldErrorPair>
+          <Field>
+            <input
+              name="email"
+              autoComplete="email"
+              placeholder="Email"
+              onChange={handleInput}
+            />
+          </Field>
+          <FieldErrorList errors={errors.email} />
+        </FieldErrorPair>
 
-        <Field>
-          <input
-            name="username"
-            autoComplete="username"
-            placeholder="Username"
-            onChange={handleInput}
-          />
-        </Field>
-        <FieldError errors={errors.username} />
+        <FieldErrorPair>
+          <Field>
+            <input
+              name="username"
+              autoComplete="username"
+              placeholder="Username"
+              onChange={handleInput}
+            />
+          </Field>
+          <FieldErrorList errors={errors.username} />
+        </FieldErrorPair>
 
-        <Field>
-          <HiddenField
-            name="password"
-            autoComplete="password"
-            placeholder="Password"
-            onChange={handleInput}
-          />
-        </Field>
-        <FieldError errors={errors.password} />
+        <FieldErrorPair>
+          <Field>
+            <HiddenField
+              name="password"
+              autoComplete="password"
+              placeholder="Password"
+              onChange={handleInput}
+            />
+          </Field>
+          <FieldErrorList errors={errors.password} />
+        </FieldErrorPair>
       </form>
     </section>
   );
