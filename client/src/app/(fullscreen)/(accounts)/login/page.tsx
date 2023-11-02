@@ -57,17 +57,17 @@ export default function LoginForm() {
           </Field>
           <FieldErrorList errors={errors.password} />
         </FieldErrorPair>
-      </form>
 
-      <button
-        className="primary-box rounded p-2"
-        onClick={(event) => {
-          event.preventDefault();
-          // TODO: submit here!
-        }}
-      >
-        Sign in
-      </button>
+        <button
+          className="primary-box rounded p-2"
+          onClick={(event) => {
+            event.preventDefault();
+            // TODO: submit here!
+          }}
+        >
+          Sign in
+        </button>
+      </form>
 
       <div className="text-sm text-center">
         Don&apos;t have an account?&nbsp;

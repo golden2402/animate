@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { FormEvent } from "react";
 
 import { useValidator } from "@/hooks/validation";
@@ -72,7 +74,24 @@ export default function RegisterForm() {
           </Field>
           <FieldErrorList errors={errors.password} />
         </FieldErrorPair>
+        
+        <button
+          className="primary-box rounded p-2"
+          onClick={(event) => {
+            event.preventDefault();
+            // TODO: submit here!
+          }}
+        >
+          Sign up
+        </button>
       </form>
+
+      <div className="text-sm text-center">
+        Already have an account?&nbsp;
+        <Link className="text-blue-500" href="/login">
+          <span>Sign in.</span>
+        </Link>
+      </div>
     </section>
   );
 }
