@@ -11,13 +11,14 @@ import db
 import bcrypt
 from fastapi import APIRouter, status, HTTPException, Request
 
-router = APIRouter()
-
 SALT_ROUNDS = 12
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+# 7 Days in mins
+ACCESS_TOKEN_EXPIRE_MINUTES = 10080
 # TODO: Move this to env, maybe .secrets?
 SECRET_KEY = "71a339833c93220552562ef61498fe8ab6fdbb8d8447694525dda84bd0602e36"
+
+router = APIRouter()
 
 
 @router.post("/auth/register")
@@ -31,9 +32,8 @@ async def login_user(user: UpdateUserAccount):
 
 
 @router.get("/auth/me")
-async def login_user(user: AuthorizedUser, request: Request):
+async def login_user(request: Request):
     try:
-        print(request.headers.get("Authorization"))
         token = request.headers.get("Authorization")
     except:
         return ErrorResponseModel("Invalid Access Token", 401, "Try loggin in again")
@@ -64,7 +64,6 @@ async def try_register(user: UpdateUserAccount):
         print("Successfully created account")
         return ResponseModel({}, "Account Created Successfully")
     except Exception as e:
-        print(e)
         print("Error Creating User account")
         return ErrorResponseModel(
             "An error occurred.", 400, "Could not create User Account"
@@ -179,6 +178,8 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     else:
         expire = datetime.utcnow() + timedelta(minutes=15)
     to_encode.update({"exp": expire})
+    # TODO: Is this needed?
+    to_encode.update({"iat": datetime.utcnow()})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
@@ -192,6 +193,8 @@ async def get_current_user(token: dict):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
+        # TODO: John do we really need the iat?
+        iat: str = payload.get("iat")
         if username is None:
             raise credentials_exception
         token_data = username
