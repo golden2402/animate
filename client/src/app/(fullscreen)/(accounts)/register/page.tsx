@@ -11,26 +11,14 @@ import FieldError from "@/components/forms/field-error";
 import HiddenField from "@/components/forms/fields/hidden-field";
 
 export default function RegisterForm() {
-  const [password, setPassword] = useState<string>();
-
   const [errorBuilders, errors] = useValidator({
     username: [required("Username is required")],
-    password: [required("Password is required")],
-    passwordConfirmation: [
-      (value: string) => {
-        return value.trim() !== password?.trim() && "Passwords must match.";
-      }
-    ]
+    password: [required("Password is required")]
   });
 
   function handleInput(event: FormEvent<HTMLInputElement>) {
     const { name: field, value } = event.currentTarget;
     errorBuilders[field](value);
-  }
-
-  function handlePassword(event: FormEvent<HTMLInputElement>) {
-    setPassword(event.currentTarget.value);
-    handleInput(event);
   }
 
   return (
@@ -53,19 +41,10 @@ export default function RegisterForm() {
             name="password"
             autoComplete="password"
             placeholder="Password"
-            onChange={handlePassword}
-          />
-        </Field>
-        <FieldError errors={errors.password} />
-
-        <Field>
-          <HiddenField
-            name="passwordConfirmation"
-            placeholder="Confirm Password"
             onChange={handleInput}
           />
         </Field>
-        <FieldError errors={errors.passwordConfirmation} />
+        <FieldError errors={errors.password} />
       </form>
     </section>
   );
