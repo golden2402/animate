@@ -95,7 +95,7 @@ async def try_login(user: UpdateUserAccount):
     if authenticated_user:
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
-            data={"sub": user.username}, expires_delta=access_token_expires
+            data={"sub": str(authenticated_user["id"])}, expires_delta=access_token_expires
         )
         return {"access_token": access_token, "token_type": "bearer"}
 
@@ -119,12 +119,11 @@ async def does_email_exist(email: str):
         await db.run_statements(f"select * from user_account where email = '{email}'")
     )[0]
 
-
 # Retrieving an authenticated user should only be called if JWT was succesffuly decoded.
-async def get_user_by_username(username: str):
+async def get_user_by_id(id : str):
     return (
         await db.run_statements(
-            f"select * from user_account where username = '{username}'"
+            f"select * from user_account where id = '{id}'"
         )
     )[0][0]
 
@@ -192,15 +191,14 @@ async def get_current_user(token: dict):
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
+        id: str = payload.get("sub")
         # TODO: John do we really need the iat?
         iat: str = payload.get("iat")
-        if username is None:
+        if id is None:
             raise credentials_exception
-        token_data = username
     except JWTError:
         raise credentials_exception
-    user = await get_user_by_username(token_data)
+    user = await get_user_by_id(id)
     if user is None:
         raise credentials_exception
     return user
