@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Optional
 
+
 class UserAccount(BaseModel):
     email: str
     username: str
@@ -9,14 +10,14 @@ class UserAccount(BaseModel):
     user_color: str
     blurb: str
 
+
 class UpdateUserAccount(BaseModel):
-    email: Optional[str]
-    username: Optional[str]
-    user_password: Optional[str]
-    display_name: Optional[str]
+    email: Optional[str] = None
+    username: Optional[str] = None
+    user_password: Optional[str] = None
+    display_name: Optional[str] = None
     user_color: Optional[str] = None
     blurb: Optional[str] = None
-
 
     class Config:
         json_schema_extra = {
@@ -26,7 +27,7 @@ class UpdateUserAccount(BaseModel):
                 "user_password": "12345678",
                 "display_name": "golden2402",
                 "user_color": "#11",
-                "blurb": "Some Info"
+                "blurb": "Some Info",
             }
         }
 
@@ -39,7 +40,6 @@ class AuthorizedUser(BaseModel):
     user_color: Optional[str] = None
     blurb: Optional[str] = None
 
-
     class Config:
         json_schema_extra = {
             "example": {
@@ -48,7 +48,7 @@ class AuthorizedUser(BaseModel):
                 "user_password": "12345678",
                 "display_name": "golden2402",
                 "user_color": "#11",
-                "blurb": "Some Info"
+                "blurb": "Some Info",
             }
         }
 
@@ -62,4 +62,4 @@ def ResponseModel(data, message):
 
 
 def ErrorResponseModel(error, code, message):
-    return {"error": error, "code": code, "message": message} 
+    return {"error": error, "code": code, "message": message}

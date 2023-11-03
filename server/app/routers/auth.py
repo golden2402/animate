@@ -2,14 +2,21 @@ from datetime import datetime, timedelta
 from models.user_account_model import (
     ErrorResponseModel,
     ResponseModel,
-    UserAccount,
     UpdateUserAccount,
-    AuthorizedUser,
 )
 from jose import JWTError, jwt
 import db
 import bcrypt
 from fastapi import APIRouter, status, HTTPException, Request
+from db.user_account import (
+    create_user_account,
+    does_username_exist,
+    does_email_exist,
+    get_user_by_id,
+    updater_user_account,
+    delete_user_account,
+)
+
 
 SALT_ROUNDS = 12
 ALGORITHM = "HS256"
@@ -31,14 +38,52 @@ async def login_user(user: UpdateUserAccount):
     return await try_login(user)
 
 
+@router.get("/auth/login")
+async def login_user(request: Request):
+    authorize_user(request)
+    return ResponseModel(None, "User is Authorized")
+
+
 @router.get("/auth/me")
 async def login_user(request: Request):
+    token = authorize_user(request)
+    return await get_current_user(token)
+
+
+@router.post("/auth/me/update")
+async def update_account(user: UpdateUserAccount, request: Request):
+    token = authorize_user(request)
+    auth_user = await get_current_user(token)
+
+    if user.user_password:
+        user.user_password = await hash_password(user.user_password)
+
+    try:
+        await updater_user_account(user, auth_user["id"])
+    except:
+        return ErrorResponseModel(None, 500, "Error Updating User Account")
+
+    return ResponseModel(None, "Successfully Updated User Account")
+
+
+@router.post("/auth/me/delete")
+async def update_account(request: Request):
+    token = authorize_user(request)
+    user = await get_current_user(token)
+    return await delete_user_account(user["id"])
+
+
+def authorize_user(request: Request):
     try:
         token = request.headers.get("Authorization")
     except:
-        return ErrorResponseModel("Invalid Access Token", 401, "Try loggin in again")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
-    return await get_current_user(token)
+    return token
 
 
 async def try_register(user: UpdateUserAccount):
@@ -95,44 +140,15 @@ async def try_login(user: UpdateUserAccount):
     if authenticated_user:
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
-            data={"sub": user.username}, expires_delta=access_token_expires
+            data={"sub": str(authenticated_user["id"])},
+            expires_delta=access_token_expires,
         )
         return {"access_token": access_token, "token_type": "bearer"}
-
-
-async def create_user_account(user: UserAccount):
-    return await db.run_statements(
-        f"insert into user_account (email, username, user_password, display_name) values ('{user.email}', '{user.username}', '{user.user_password}', '{user.display_name}')"
-    )
-
-
-async def does_username_exist(username: str):
-    return (
-        await db.run_statements(
-            f"select * from user_account where username = '{username}'"
-        )
-    )[0]
-
-
-async def does_email_exist(email: str):
-    return (
-        await db.run_statements(f"select * from user_account where email = '{email}'")
-    )[0]
-
-
-# Retrieving an authenticated user should only be called if JWT was succesffuly decoded.
-async def get_user_by_username(username: str):
-    return (
-        await db.run_statements(
-            f"select * from user_account where username = '{username}'"
-        )
-    )[0][0]
 
 
 async def get_user_by_credentials(username: str, unhashed_password: str):
     print(f"Looking for User with username {username}")
 
-    # TODO: Talk to John why this is returning [array][array]
     fetched_user = (
         await db.run_statements(
             f"select * from user_account where username = '{username}'"
@@ -192,15 +208,16 @@ async def get_current_user(token: dict):
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
+        id: str = payload.get("sub")
         # TODO: John do we really need the iat?
         iat: str = payload.get("iat")
-        if username is None:
+        if id is None:
             raise credentials_exception
-        token_data = username
     except JWTError:
         raise credentials_exception
-    user = await get_user_by_username(token_data)
-    if user is None:
+
+    try:
+        user = await get_user_by_id(id)
+    except:
         raise credentials_exception
     return user
