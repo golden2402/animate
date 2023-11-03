@@ -4,14 +4,13 @@ export default function FieldErrorList({ errors }: { errors: any[] }) {
       <div
         className="
         px-1.5 py-1
+        rounded
         bg-red-100
         outline outline-1 outline-red-400
-        rounded"
+        text-xs text-red-500"
       >
         {errors.map((error, i) => (
-          <p className="text-sm text-red-500" key={`error-${i}`}>
-            {error}
-          </p>
+          <p key={`error-${i}`}>{error}</p>
         ))}
       </div>
     )
