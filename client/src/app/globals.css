@@ -3,8 +3,13 @@
 @tailwind utilities;
 
 @layer base {
-  input {
+  input,
+  textarea {
     @apply w-full bg-transparent;
+  }
+
+  textarea {
+    @apply h-full;
   }
 
   .fg {
@@ -30,6 +35,14 @@
 
   .primary-shadow {
     @apply shadow shadow-blue-500;
+  }
+
+  .danger-box {
+    @apply bg-red-500 text-neutral-100;
+  }
+
+  .danger-shadow {
+    @apply shadow shadow-red-800;
   }
 }
 
