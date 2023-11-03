@@ -3,6 +3,15 @@
 @tailwind utilities;
 
 @layer base {
+  input,
+  textarea {
+    @apply w-full bg-transparent;
+  }
+
+  textarea {
+    @apply h-full;
+  }
+
   .fg {
     @apply bg-neutral-100 text-neutral-700;
   }
@@ -11,9 +20,29 @@
     @apply shadow-md shadow-black/30;
   }
 
+  .fg-outline {
+    @apply outline outline-1 outline-black/10;
+  }
+
   .fg-focus {
     @apply bg-neutral-200 text-neutral-800
       outline outline-1 outline-black/20;
+  }
+
+  .primary-box {
+    @apply bg-blue-500 text-neutral-100;
+  }
+
+  .primary-shadow {
+    @apply shadow shadow-blue-500;
+  }
+
+  .danger-box {
+    @apply bg-red-500 text-neutral-100;
+  }
+
+  .danger-shadow {
+    @apply shadow shadow-red-800;
   }
 }
 

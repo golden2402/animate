@@ -19,7 +19,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`fg ${baseFont.className}`}>{children}</body>
+      <body className={`flex flex-col min-h-screen fg ${baseFont.className}`}>
+        {children}
+      </body>
     </html>
   );
 }
