@@ -46,14 +46,14 @@ async def login_user(request: Request):
 
 @router.get("/auth/me")
 async def login_user(request: Request):
-    token = authorize_user(request)
-    return await get_current_user(token)
+    id = authorize_user(request)
+    return await get_current_user(id)
 
 
 @router.post("/auth/me/update")
 async def update_account(user: UpdateUserAccount, request: Request):
-    token = authorize_user(request)
-    auth_user = await get_current_user(token)
+    id = authorize_user(request)
+    auth_user = await get_current_user(id)
 
     if user.user_password:
         user.user_password = await hash_password(user.user_password)
@@ -68,22 +68,25 @@ async def update_account(user: UpdateUserAccount, request: Request):
 
 @router.post("/auth/me/delete")
 async def update_account(request: Request):
-    token = authorize_user(request)
-    user = await get_current_user(token)
-    return await delete_user_account(user["id"])
+    id = authorize_user(request)
+    return await delete_user_account(id)
 
 
 def authorize_user(request: Request):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
     try:
         token = request.headers.get("Authorization")
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        id: str = payload.get("sub")
+        if id is None:
+            raise credentials_exception
+        return id
     except:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-
-    return token
+        raise credentials_exception
 
 
 async def try_register(user: UpdateUserAccount):
@@ -200,24 +203,11 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-async def get_current_user(token: dict):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        id: str = payload.get("sub")
-        # TODO: John do we really need the iat?
-        iat: str = payload.get("iat")
-        if id is None:
-            raise credentials_exception
-    except JWTError:
-        raise credentials_exception
-
+async def get_current_user(id: str):
     try:
         user = await get_user_by_id(id)
     except:
-        raise credentials_exception
+        return ErrorResponseModel(
+            "User Lookup", 404, "Could Not find User with specified ID"
+        )
     return user
