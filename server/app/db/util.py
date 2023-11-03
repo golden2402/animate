@@ -1,2 +1,7 @@
 def get_items_to_update(obj: dict):
-    return ",".join([f"{key} = {value}" for key, value in obj.items()])
+    statements = []
+    for key, value in obj:
+        if not value:
+            continue
+        statements.append(f"{key} = '{value}'")
+    return ", ".join(statements)

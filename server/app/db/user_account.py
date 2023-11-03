@@ -35,9 +35,10 @@ async def get_user_by_id(id: str):
 
 
 async def updater_user_account(user: UpdateUserAccount, id: str):
+    print(f"Update user_account set {get_items_to_update(user)} where id = {id}")
     return await db.run_statements(
         f"Update user_account set {get_items_to_update(user)} where id = {id}"
-    )[0]
+    )
 
 
 # DELETE FROM table_name WHERE condition;

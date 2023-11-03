@@ -13,6 +13,8 @@ from db.user_account import (
     does_username_exist,
     does_email_exist,
     get_user_by_id,
+    updater_user_account,
+    delete_user_account,
 )
 
 
@@ -36,14 +38,52 @@ async def login_user(user: UpdateUserAccount):
     return await try_login(user)
 
 
+@router.get("/auth/login")
+async def login_user(request: Request):
+    authorize_user(request)
+    return ResponseModel(None, "User is Authorized")
+
+
 @router.get("/auth/me")
 async def login_user(request: Request):
+    token = authorize_user(request)
+    return await get_current_user(token)
+
+
+@router.post("/auth/me/update")
+async def update_account(user: UpdateUserAccount, request: Request):
+    token = authorize_user(request)
+    auth_user = await get_current_user(token)
+
+    if user.user_password:
+        user.user_password = await hash_password(user.user_password)
+
+    try:
+        await updater_user_account(user, auth_user["id"])
+    except:
+        return ErrorResponseModel(None, 500, "Error Updating User Account")
+
+    return ResponseModel(None, "Successfully Updated User Account")
+
+
+@router.post("/auth/me/delete")
+async def update_account(request: Request):
+    token = authorize_user(request)
+    user = await get_current_user(token)
+    return await delete_user_account(user["id"])
+
+
+def authorize_user(request: Request):
     try:
         token = request.headers.get("Authorization")
     except:
-        return ErrorResponseModel("Invalid Access Token", 401, "Try loggin in again")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
-    return await get_current_user(token)
+    return token
 
 
 async def try_register(user: UpdateUserAccount):
@@ -109,7 +149,6 @@ async def try_login(user: UpdateUserAccount):
 async def get_user_by_credentials(username: str, unhashed_password: str):
     print(f"Looking for User with username {username}")
 
-    # TODO: Talk to John why this is returning [array][array]
     fetched_user = (
         await db.run_statements(
             f"select * from user_account where username = '{username}'"
@@ -176,7 +215,9 @@ async def get_current_user(token: dict):
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    user = await get_user_by_id(id)
-    if user is None:
+
+    try:
+        user = await get_user_by_id(id)
+    except:
         raise credentials_exception
     return user
