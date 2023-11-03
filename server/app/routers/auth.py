@@ -132,7 +132,6 @@ async def try_login(user: UpdateUserAccount):
     authenticated_user = await get_user_by_credentials(
         user.username, user.user_password
     )
-
     if not authenticated_user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -163,12 +162,16 @@ async def get_user_by_credentials(username: str, unhashed_password: str):
             if compare_password(unhashed_password, fetched_user["user_password"]):
                 return fetched_user
             else:
-                return ErrorResponseModel(
-                    "Invalid Credentials", 401, "Password is incorrect"
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Incorrect username or password",
+                    headers={"WWW-Authenticate": "Bearer"},
                 )
         except:
-            return ErrorResponseModel(
-                "Invalid Credentials", 401, "Password is incorrect"
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Incorrect username or password",
+                headers={"WWW-Authenticate": "Bearer"},
             )
     return None
 
