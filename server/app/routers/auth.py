@@ -2,14 +2,19 @@ from datetime import datetime, timedelta
 from models.user_account_model import (
     ErrorResponseModel,
     ResponseModel,
-    UserAccount,
     UpdateUserAccount,
-    AuthorizedUser,
 )
 from jose import JWTError, jwt
 import db
 import bcrypt
 from fastapi import APIRouter, status, HTTPException, Request
+from db.user_account import (
+    create_user_account,
+    does_username_exist,
+    does_email_exist,
+    get_user_by_id,
+)
+
 
 SALT_ROUNDS = 12
 ALGORITHM = "HS256"
@@ -95,37 +100,10 @@ async def try_login(user: UpdateUserAccount):
     if authenticated_user:
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
-            data={"sub": str(authenticated_user["id"])}, expires_delta=access_token_expires
+            data={"sub": str(authenticated_user["id"])},
+            expires_delta=access_token_expires,
         )
         return {"access_token": access_token, "token_type": "bearer"}
-
-
-async def create_user_account(user: UserAccount):
-    return await db.run_statements(
-        f"insert into user_account (email, username, user_password, display_name) values ('{user.email}', '{user.username}', '{user.user_password}', '{user.display_name}')"
-    )
-
-
-async def does_username_exist(username: str):
-    return (
-        await db.run_statements(
-            f"select * from user_account where username = '{username}'"
-        )
-    )[0]
-
-
-async def does_email_exist(email: str):
-    return (
-        await db.run_statements(f"select * from user_account where email = '{email}'")
-    )[0]
-
-# Retrieving an authenticated user should only be called if JWT was succesffuly decoded.
-async def get_user_by_id(id : str):
-    return (
-        await db.run_statements(
-            f"select * from user_account where id = '{id}'"
-        )
-    )[0][0]
 
 
 async def get_user_by_credentials(username: str, unhashed_password: str):
