@@ -7,6 +7,7 @@ import { FormEvent } from "react";
 import { useValidator } from "@/hooks/validation";
 
 import required from "@/hooks/validation/validators/required";
+import regex from "@/hooks/validation/validators/regex";
 import naiveEmail from "@/hooks/validation/validators/naive-email";
 import { min } from "@/hooks/validation/validators/range";
 
@@ -22,11 +23,15 @@ export default function RegisterForm() {
       required("Email is required!"),
       naiveEmail("Email is of invalid format!")
     ],
-    username: [required("Username is required!")],
-    password: [
-      required("Password is required!"),
-      min(6, "Password must be at least 6 characters.")
-    ]
+    username: [
+      min(4, "Username must be at least 4 characters."),
+      regex(
+        /[a-zA-Z0-9._]+/,
+        "Please use numbers, letters, underscores, or dots."
+      ),
+      regex(/^(?!.*[.]{2})/, "Username cannot contain repeating dots.")
+    ],
+    password: [min(6, "Password must be at least 6 characters.")]
   });
 
   function handleInput(event: FormEvent<HTMLInputElement>) {
@@ -74,7 +79,7 @@ export default function RegisterForm() {
           </Field>
           <FieldErrorList errors={errors.password} />
         </FieldErrorPair>
-        
+
         <button
           className="primary-box rounded p-2"
           onClick={(event) => {
