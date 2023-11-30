@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { FormEvent } from "react";
 
+import { useFormState, useValidationBinder } from "@/hooks/form-state";
 import { useValidator } from "@/hooks/validation";
 
 import required from "@/hooks/validation/validators/required";
@@ -18,12 +19,14 @@ import FieldErrorPair from "@/components/forms/field-error-pair";
 import HiddenField from "@/components/forms/fields/hidden-field";
 
 export default function RegisterForm() {
+  const { formState, setFormField } = useFormState({});
   const [errorBuilders, errors] = useValidator({
     email: [
       required("Email is required!"),
       naiveEmail("Email is of invalid format!")
     ],
     username: [
+      required("Username is required!"),
       min(4, "Username must be at least 4 characters."),
       regex(
         /[a-zA-Z0-9._]+/,
@@ -31,16 +34,23 @@ export default function RegisterForm() {
       ),
       regex(/^(?!.*[.]{2})/, "Username cannot contain repeating dots.")
     ],
-    password: [min(6, "Password must be at least 6 characters.")]
+    password: [
+      required("Password is required!"),
+      min(6, "Password must be at least 6 characters.")
+    ]
   });
+
+  const validate = useValidationBinder(formState, errorBuilders);
 
   function handleInput(event: FormEvent<HTMLInputElement>) {
     const { name: field, value } = event.currentTarget;
+
+    setFormField(field, value);
     errorBuilders[field](value);
   }
 
   return (
-    <section className="flex flex-col gap-4 p-4">
+    <section className="flex flex-col gap-4 p-12">
       <h2 className="text-xl font-medium">Sign Up</h2>
 
       <form className="flex flex-col gap-4">
@@ -72,7 +82,7 @@ export default function RegisterForm() {
           <Field>
             <HiddenField
               name="password"
-              autoComplete="password"
+              autoComplete="current-password"
               placeholder="Password"
               onChange={handleInput}
             />
@@ -84,7 +94,10 @@ export default function RegisterForm() {
           className="primary-box rounded p-2"
           onClick={(event) => {
             event.preventDefault();
-            // TODO: submit here!
+
+            if (validate()) {
+              // TODO
+            }
           }}
         >
           Sign up

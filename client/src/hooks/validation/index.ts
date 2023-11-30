@@ -9,6 +9,8 @@ export type ValidatorErrors = Record<string, any>;
 
 type ErrorBuilder = (value: string) => boolean;
 
+export type ErrorBuilderMapping = Record<string, ErrorBuilder>;
+
 export function useValidator(schema: ValidatorSchema) {
   const schemaKeys = Object.keys(schema);
   const emptyErrorFields = schemaKeys.reduce((result, key) => {

@@ -30,7 +30,7 @@ export default function LoginForm() {
   }
 
   return (
-    <section className="flex flex-col gap-4 p-4">
+    <section className="flex flex-col gap-4 p-12">
       <h2 className="text-xl font-medium">Login</h2>
 
       <form className="flex flex-col gap-4">
