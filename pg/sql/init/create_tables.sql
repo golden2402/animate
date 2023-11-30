@@ -16,20 +16,20 @@ create table if not exists
 create table if not exists
   follow (
     followee_id serial primary key,
-    foreign key (followee_id) references user_account (id) on delete cascade,
+    foreign key (followee_id) references user_account (id),
     follower_id serial,
-    foreign key (follower_id) references user_account (id) on delete cascade
+    foreign key (follower_id) references user_account (id)
   );
 
 create domain date_year as smallint check (value > 1799);
 
-create type season_type as enum('winter', 'spring', 'fall', 'summer');
+-- create type season_type as enum('winter', 'spring', 'fall', 'summer');
 
 create table if not exists
   season (
-    id integer primary key,
+    id serial primary key,
     season_year date_year not null,
-    season_name season_type not null
+    season_name varchar(255) not null
   );
 
 create table if not exists

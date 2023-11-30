@@ -3,13 +3,13 @@ from typing import Optional
 
 
 class Season(BaseModel):
-    id: str
+    id: int
     season_year: str
     season_name: str
 
 
 class UpdateSeason(BaseModel):
-    id: Optional[str] = None
+    id: Optional[int] = None
     season_year: Optional[str] = None
     season_name: Optional[str] = None
 

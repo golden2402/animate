@@ -1,12 +1,14 @@
-from animate.server.app.models.genre_model import UpdateGenre
-from animate.server.app.models.producer_model import UpdateProducer
-from animate.server.app.models.season_model import UpdateSeason
+# from animate.server.app.models.genre_model import UpdateGenre
+# from animate.server.app.models.producer_model import UpdateProducer
+# from animate.server.app.models.season_model import UpdateSeason
 import db
 from models.anime_model import UpdateAnime
 from models.anime_episode_model import UpdateAnimeEpisode
 from models.anime_genre_model import UpdateAnimeGenre
 from models.episode_model import UpdateEpisode
-from db.util import get_items_to_update
+from models.genre_model import UpdateGenre
+from models.season_model import UpdateSeason
+from models.producer_model import UpdateProducer
 
 
 ##################### ANIME #####################################
@@ -17,17 +19,26 @@ async def does_anime_exists(anime: UpdateAnime):
 
 
 async def create_anime(anime: UpdateAnime):
-    return await db.run_statements(
-        f"insert into anime (title, season_id) values ( '{anime.title}', '{anime.season_id}')"
-    )
+    if anime["season_id"]:
+        return await db.run_statements(
+            f"insert into anime (id, title, season_id) values ( '{anime['id']}', '{anime['title']}', '{anime['season_id']}')"
+        )
+    else:
+        return await db.run_statements(
+            f"insert into anime (id, title) values ( '{anime['id']}', '{anime['title']}')"
+        )
 
 
 async def get_anime_by_id(id: str):
-    return (await db.run_statements(f"select * from anime where id = '{id}'"))[0][0]
+    return (await db.run_statements(f"select * from anime where id = '{id}'"))[0]
 
 
 async def delete_anime(id: str):
     return await db.run_statements(f"delete from anime where id = {id}")
+
+
+async def get_all_anime():
+    return (await db.run_statements(f"select * from anime"))[0]
 
 
 ##################### EPISODE #####################################
@@ -86,15 +97,20 @@ async def delete_genre(id: str):
 
 
 async def does_season_exists(season: UpdateSeason):
-    return await db.run_statements(
-        f"select * from season where season_name = '{season.season_name}'"
+    val = await db.run_statements(
+        f"select * from season where season_name = '{season['season_name']}' AND season_year = '{season['season_year']}'"
     )
+    return val[0]
+    return await db.run_statements(
+        f"select * from season where season_name = '{season['season_name']}' AND season_year = '{season['season_year']}'"
+    )[0][0]
 
 
 async def create_season(season: UpdateSeason):
-    return await db.run_statements(
-        f"insert into season (season_year, season_name) values ( '{season.season_year}', '{season.season_name}')"
+    val = await db.run_statements(
+        f"insert into season (season_year, season_name) values ( '{season['season_year']}', '{season['season_name']}')"
     )
+    return val
 
 
 async def get_season_by_id(id: str):

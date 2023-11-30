@@ -1,10 +1,13 @@
 from fastapi import FastAPI
 import db
-from routers import auth
+from routers import auth, anime
+from routers.anime import router as AnimeRouter
 
 app = FastAPI()
 
 app.include_router(auth.router)
+app.include_router(AnimeRouter, tags=["anime"], prefix="/anime")
+
 
 @app.get("/")
 async def root():
