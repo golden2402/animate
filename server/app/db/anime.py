@@ -1,6 +1,5 @@
 import db
 from models.anime_model import UpdateAnime
-from models.episode_model import UpdateEpisode
 from models.genre_model import UpdateGenre
 from models.season_model import UpdateSeason
 from models.producer_model import UpdateProducer
@@ -38,35 +37,6 @@ async def delete_anime(id: str):
 
 async def get_all_anime():
     return (await db.run_statements(f"select * from anime"))[0]
-
-
-##################### EPISODE #####################################
-
-
-async def does_episode_exists(episode: UpdateEpisode):
-    return await db.run_statements(
-        f"select * from episode where episode_name = '{episode.episode_name}'"
-    )
-
-
-async def create_episode(episode: int):
-    return (
-        await db.run_statements(
-            f"insert into episode (episode_number) values ( '{episode}') RETURNING id"
-        )
-    )[0]
-
-
-async def get_episode_by_id(id: str):
-    return (await db.run_statements(f"select * from episode where id = '{id}'"))[0][0]
-
-
-async def delete_episode(id: str):
-    return await db.run_statements(f"delete from episode where id = {id}")
-
-
-async def get_all_episodes():
-    return (await db.run_statements(f"select * from episode"))[0]
 
 
 ##################### GENRE #####################################
@@ -184,19 +154,6 @@ async def get_all_anime_genre_relationships():
 async def create_anime_genre_relationship(anime: UpdateAnime, genre: UpdateGenre):
     return await db.run_statements(
         f"insert into anime_genre (anime_id, genre_id) values ( '{anime['id']}', '{genre['id']}')"
-    )
-
-
-##################### ANIME EPISODE RELATIONSHIP #####################################
-
-
-async def get_all_anime_episode_relationships():
-    return (await db.run_statements(f"select * from anime_episode"))[0]
-
-
-async def create_anime_episode_relationship(anime: UpdateAnime, episode: UpdateEpisode):
-    return await db.run_statements(
-        f"insert into anime_episode (anime_id, episode_id) values ( '{anime['id']}', '{episode['id']}')"
     )
 
 

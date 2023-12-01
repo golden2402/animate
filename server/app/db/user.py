@@ -1,5 +1,5 @@
 import db
-from models.watched_episode_model import UpdateWatchedEpisode
+from models.watched_anime_model import UpdateWatchedAnime
 from models.rating_model import UpdateRating
 from models.review_model import UpdateReview
 
@@ -28,13 +28,13 @@ async def delete_follow_relation(followee_id: str, follower_id: str):
     )
 
 
-async def delete_all_follow_by_user(followee_id: str):
+async def delete_all_follow_by_user_db(followee_id: str):
     return await db.run_statements(
         f"delete from follow where followee_id = '{followee_id}'"
     )
 
 
-async def get_all_followees(followee_id: str):
+async def get_all_followees_db(followee_id: str):
     return (
         await db.run_statements(
             f"select * from follow where followee_id = '{followee_id}'"
@@ -42,7 +42,7 @@ async def get_all_followees(followee_id: str):
     )[0]
 
 
-async def get_all_followers(follower_id: str):
+async def get_all_followers_db(follower_id: str):
     return (
         await db.run_statements(
             f"select * from follow where follower_id = '{follower_id}'"
@@ -91,67 +91,67 @@ async def get_all_favorites():
     return (await db.run_statements(f"select * from favorite"))[0]
 
 
-##################### WATCHED EPISODE #####################################
+##################### WATCHED ANIME #####################################
 
 
-async def has_user_watched(user_id: str, episode_id: str):
+async def has_user_watched(user_id: str, anime_id: str):
     return await db.run_statements(
-        f"select * from watched_episodes where user_id = '{user_id}' and episode_id = '{episode_id}'"
+        f"select * from watched_anime where user_id = '{user_id}' and anime_id = '{anime_id}'"
     )
 
 
-async def create_watched_episode_relation(wacthed_episode: UpdateWatchedEpisode):
+async def create_watched_anime_relation(watched_anime: UpdateWatchedAnime):
     return (
         await db.run_statements(
-            f"insert into watched_episodes (user_id, episode_id, watch_date) values ( '{wacthed_episode['user_id']}', '{wacthed_episode['episode_id']}', '{wacthed_episode['watch_date']}')"
+            f"insert into watched_anime (user_id, anime_id, watch_count, watch_date) values ( '{watched_anime['user_id']}', '{watched_anime['anime_id']}', '{watched_anime['watch_count']}', '{watched_anime['watch_date']}')"
         )
     )[0]
 
 
-async def delete_watched_episode_relation(user_id: str, episode_id: str):
+async def delete_watched_anime_relation(user_id: str, anime_id: str):
     return await db.run_statements(
-        f"delete from watched_episodes where user_id = '{user_id}' and episode_id = '{episode_id}'"
+        f"delete from watched_anime where user_id = '{user_id}' and anime_id = '{anime_id}'"
     )
 
 
-async def delete_all_watched_episodes(user_id: str):
+async def delete_all_watched_anime(user_id: str):
     return await db.run_statements(
-        f"delete from watched_episodes where user_id = '{user_id}'"
+        f"delete from watched_anime where user_id = '{user_id}'"
     )
 
 
-async def get_all_watched_episodes_by_user(user_id: str):
+async def get_all_watched_anime_by_user(user_id: str):
     return (
         await db.run_statements(
-            f"select * from watched_episodes where user_id = '{user_id}'"
+            f"select * from watched_anime where user_id = '{user_id}'"
         )
     )[0]
 
 
-async def get_all_watched_episodes():
-    return (await db.run_statements(f"select * from watched_episodes"))[0]
+async def get_all_watched_anime():
+    return (await db.run_statements(f"select * from watched_anime"))[0]
 
 
 ##################### RATING #####################################
 
 
-async def has_user_rated_episode(user_id: str, episode_id: str):
+async def has_user_rated_anime(user_id: str, anime_id: str):
     return await db.run_statements(
-        f"select * from rating where user_id = '{user_id}' and episode_id = '{episode_id}'"
+        f"select * from rating where user_id = '{user_id}' and anime_id = '{anime_id}'"
     )
 
 
 async def create_rating_raltion(rating: UpdateRating):
     return (
         await db.run_statements(
-            f"insert into rating (user_id, episode_id, rate_score, rate_date) values ( '{rating['user_id']}', '{rating['episode_id']}', '{rating['rate_score']}', '{rating['rate_date']}')"
+            f"insert into rating (user_id, anime_id, rate_score, rate_date) values ( '{rating['user_id']}', '{rating['anime_id']}', '{rating['rate_score']}', '{rating['rate_date']}')"
         )
     )[0]
 
 
-async def delete_rating_relation(user_id: str, episode_id: str):
+async def delete_rating_relation(user_id: str, anime_id: str):
     return await db.run_statements(
-        f"delete from rating where user_id = '{user_id}' and episode_id = '{episode_id}'"
+        f"delete from rating where user_id = '{user_id}' and anime_id = '{anime_id}'"
     )
 
 
@@ -161,11 +161,9 @@ async def get_ratings_by_user(user_id: str):
     )[0]
 
 
-async def get_ratings_by_episode(episode_id: str):
+async def get_ratings_by_anime(anime_id: str):
     return (
-        await db.run_statements(
-            f"select * from rating where episode_id = '{episode_id}'"
-        )
+        await db.run_statements(f"select * from rating where anime_id = '{anime_id}'")
     )[0]
 
 
@@ -182,23 +180,23 @@ async def get_all_ratings():
 ##################### REVIEW #####################################
 
 
-async def has_user_reviewd_episode(user_id: str, episode_id: str):
+async def has_user_reviewd_anime(user_id: str, anime_id: str):
     return await db.run_statements(
-        f"select * from review where user_id = '{user_id}' and episode_id = '{episode_id}'"
+        f"select * from review where user_id = '{user_id}' and anime_id = '{anime_id}'"
     )
 
 
 async def create_review_relation(review: UpdateReview):
     return (
         await db.run_statements(
-            f"insert into review (user_id, episode_id, post) values ( '{review['user_id']}', '{review['episode_id']}', '{review['post']}')"
+            f"insert into review (user_id, anime_id, post) values ( '{review['user_id']}', '{review['anime_id']}', '{review['post']}')"
         )
     )[0]
 
 
-async def delete_review_relation(user_id: str, episode_id: str):
+async def delete_review_relation(user_id: str, anime_id: str):
     return await db.run_statements(
-        f"delete from review where user_id = '{user_id}' and episode_id = '{episode_id}'"
+        f"delete from review where user_id = '{user_id}' and anime_id = '{anime_id}'"
     )
 
 
@@ -208,11 +206,9 @@ async def get_reviews_by_user(user_id: str):
     )[0]
 
 
-async def get_reviews_by_episode(episode_id: str):
+async def get_reviews_by_anime(anime_id: str):
     return (
-        await db.run_statements(
-            f"select * from review where episode_id = '{episode_id}'"
-        )
+        await db.run_statements(f"select * from review where anime_id = '{anime_id}'")
     )[0]
 
 

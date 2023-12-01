@@ -3,7 +3,6 @@ import db
 from routers.auth import router as AuthRouter
 from routers.anime import router as AnimeRouter
 from routers.genre import router as GenreRouter
-from routers.episodes import router as EpisodeRouter
 from routers.producer import router as ProducerRouter
 from routers.season import router as SeasonRouter
 from routers.user import router as UserRouter
@@ -24,7 +23,6 @@ app = FastAPI()
 app.include_router(AuthRouter, tags=["auth"], prefix="/auth")
 app.include_router(AnimeRouter, tags=["anime"], prefix="/anime")
 app.include_router(GenreRouter, tags=["genre"], prefix="/genre")
-app.include_router(EpisodeRouter, tags=["episode"], prefix="/episode")
 app.include_router(ProducerRouter, tags=["producer"], prefix="/producer")
 app.include_router(SeasonRouter, tags=["season"], prefix="/season")
 app.include_router(UserRouter, tags=["user"], prefix="/user")

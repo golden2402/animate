@@ -15,9 +15,9 @@ create table if not exists
 
 create table if not exists
   follow (
-    followee_id serial primary key,
+    followee_id integer primary key,
     foreign key (followee_id) references user_account (id),
-    follower_id serial,
+    follower_id integer,
     foreign key (follower_id) references user_account (id)
   );
 
@@ -45,13 +45,13 @@ create table if not exists
     id integer primary key,
     title varchar(255),
     episodes smallint,
-    season_id serial,
+    season_id integer,
     foreign key (season_id) references season (id) on delete set null
   );
 
 create table if not exists
   favorite (
-    user_id serial,
+    user_id integer,
     foreign key (user_id) references user_account (id),
     anime_id integer,
     foreign key (anime_id) references anime (id)
@@ -73,7 +73,7 @@ create table if not exists
 
 create table if not exists
   watched_anime (
-    user_id serial,
+    user_id integer,
     foreign key (user_id) references user_account (id),
     anime_id integer,
     foreign key (anime_id) references anime (id),
@@ -86,9 +86,9 @@ create table if not exists
 -- two (if at all?):
 create table if not exists
   rating (
-    user_id serial,
+    user_id integer,
     foreign key (user_id) references user_account (id),
-    anime_id serial,
+    anime_id integer,
     foreign key (anime_id) references anime (id),
     rate_score smallint check (
       rate_score >= 0
@@ -99,9 +99,9 @@ create table if not exists
 
 create table if not exists
   review (
-    user_id serial,
+    user_id integer,
     foreign key (user_id) references user_account (id),
-    anime_id serial,
+    anime_id integer,
     foreign key (anime_id) references anime (id),
     post varchar(2047) not null
   );
