@@ -19,7 +19,7 @@ class UpdateRating(BaseModel):
         json_schema_extra = {
             "example": {
                 "user_id": "1",
-                "anime_id": "2",
+                "anime_id": "57356",
                 "rate_score": 2,
                 "rate_date": "11/27/2023",
             }

@@ -105,7 +105,6 @@ async def has_user_watched(user_id: str, anime_id: str):
 
 
 async def create_watched_anime_relation(watched_anime: UpdateWatchedAnime):
-    print(watched_anime)
     return (
         await db.run_statements(
             f"insert into watched_anime (user_id, anime_id, watch_count, watch_date) values ( '{watched_anime.user_id}', '{watched_anime.anime_id}', '{watched_anime.watch_count}', '{watched_anime.watch_date}')"
@@ -141,15 +140,17 @@ async def get_all_watched_anime():
 
 
 async def has_user_rated_anime(user_id: str, anime_id: str):
-    return await db.run_statements(
-        f"select * from rating where user_id = '{user_id}' and anime_id = '{anime_id}'"
-    )
+    return (
+        await db.run_statements(
+            f"select * from rating where user_id = '{user_id}' and anime_id = '{anime_id}'"
+        )
+    )[0]
 
 
 async def create_rating_raltion(rating: UpdateRating):
     return (
         await db.run_statements(
-            f"insert into rating (user_id, anime_id, rate_score, rate_date) values ( '{rating['user_id']}', '{rating['anime_id']}', '{rating['rate_score']}', '{rating['rate_date']}')"
+            f"insert into rating (user_id, anime_id, rate_score, rate_date) values ( '{rating.user_id}', '{rating.anime_id}', '{rating.rate_score}', '{rating.rate_date}')"
         )
     )[0]
 
@@ -160,19 +161,20 @@ async def delete_rating_relation(user_id: str, anime_id: str):
     )
 
 
-async def get_ratings_by_user(user_id: str):
+async def get_ratings_by_user_db(user_id: str):
     return (
         await db.run_statements(f"select * from rating where user_id = '{user_id}'")
     )[0]
 
 
-async def get_ratings_by_anime(anime_id: str):
+async def get_ratings_by_anime_db(anime_id: str):
     return (
         await db.run_statements(f"select * from rating where anime_id = '{anime_id}'")
     )[0]
 
 
-async def get_ratings_by_score(score: int):
+async def get_ratings_by_score_db(score: int):
+    print(score)
     return (
         await db.run_statements(f"select * from rating where rate_score = '{score}'")
     )[0]
