@@ -36,7 +36,7 @@ create table if not exists
   anime (
     id integer primary key,
     title varchar(255),
-    episodes: integer,
+    episodes integer,
     season_id integer,
     foreign key (season_id) references season (id) on delete set null
   );
