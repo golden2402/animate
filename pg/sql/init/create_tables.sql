@@ -64,7 +64,7 @@ create table if not exists
 
 create table if not exists
   episode (
-    id integer primary key,
+    id serial primary key,
     episode_number smallint not null
   );
 
@@ -72,7 +72,7 @@ create table if not exists
   anime_episode (
     anime_id integer,
     foreign key (anime_id) references anime (id),
-    episode_id integer,
+    episode_id serial,
     foreign key (episode_id) references episode (id)
   );
 
@@ -80,7 +80,7 @@ create table if not exists
   watched_episodes (
     user_id serial,
     foreign key (user_id) references user_account (id),
-    episode_id integer,
+    episode_id serial,
     foreign key (episode_id) references episode (id),
     watch_date date
   );
@@ -91,7 +91,7 @@ create table if not exists
   rating (
     user_id serial,
     foreign key (user_id) references user_account (id),
-    episode_id integer,
+    episode_id serial,
     foreign key (episode_id) references episode (id),
     -- should this be not null?:
     rate_score smallint not null check (
