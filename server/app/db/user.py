@@ -188,15 +188,17 @@ async def get_all_ratings():
 
 
 async def has_user_reviewd_anime(user_id: str, anime_id: str):
-    return await db.run_statements(
-        f"select * from review where user_id = '{user_id}' and anime_id = '{anime_id}'"
-    )
+    return (
+        await db.run_statements(
+            f"select * from review where user_id = '{user_id}' and anime_id = '{anime_id}'"
+        )
+    )[0]
 
 
 async def create_review_relation(review: UpdateReview):
     return (
         await db.run_statements(
-            f"insert into review (user_id, anime_id, post) values ( '{review['user_id']}', '{review['anime_id']}', '{review['post']}')"
+            f"insert into review (user_id, anime_id, post) values ( '{review.user_id}', '{review.anime_id}', '{review.post}')"
         )
     )[0]
 
@@ -207,13 +209,13 @@ async def delete_review_relation(user_id: str, anime_id: str):
     )
 
 
-async def get_reviews_by_user(user_id: str):
+async def get_reviews_by_user_db(user_id: str):
     return (
         await db.run_statements(f"select * from review where user_id = '{user_id}'")
     )[0]
 
 
-async def get_reviews_by_anime(anime_id: str):
+async def get_reviews_by_anime_db(anime_id: str):
     return (
         await db.run_statements(f"select * from review where anime_id = '{anime_id}'")
     )[0]

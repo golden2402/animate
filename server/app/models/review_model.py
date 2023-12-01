@@ -18,6 +18,6 @@ class UpdateReview(BaseModel):
             "example": {
                 "user_id": "1",
                 "post": "Some Info about the review",
-                "anime_id": "21",
+                "anime_id": "57356",
             }
         }
