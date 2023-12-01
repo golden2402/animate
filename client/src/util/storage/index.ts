@@ -11,6 +11,9 @@ export function getStorageItem(key: string): string | null {
   return withLocalStorage((localStorage) => localStorage.getItem(key));
 }
 
-export function setStorageItem(key: string, value: string): string | null {
+export function setStorageItem(
+  key: string,
+  value: string | null
+): string | null {
   return withLocalStorage((localStorage) => localStorage.setItem(key, value));
 }
