@@ -25,29 +25,29 @@ SECRET_KEY = "71a339833c93220552562ef61498fe8ab6fdbb8d8447694525dda84bd0602e36"
 router = APIRouter()
 
 
-@router.post("/auth/register")
+@router.post("/register")
 async def register_user(user: UpdateUserAccount):
     return await try_register(user)
 
 
-@router.post("/auth/login")
+@router.post("/login")
 async def login_user(user: UpdateUserAccount):
     return await try_login(user)
 
 
-@router.get("/auth/login")
+@router.get("/login")
 async def login_user(request: Request):
     authorize_user(request)
     return ResponseModel(None, "User is Authorized")
 
 
-@router.get("/auth/me")
+@router.get("/me")
 async def login_user(request: Request):
     id = authorize_user(request)
     return await get_current_user(id)
 
 
-@router.post("/auth/me/update")
+@router.post("/me/update")
 async def update_account(user: UpdateUserAccount, request: Request):
     id = authorize_user(request)
     auth_user = await get_current_user(id)
@@ -63,7 +63,7 @@ async def update_account(user: UpdateUserAccount, request: Request):
     return ResponseModel(None, "Successfully Updated User Account")
 
 
-@router.post("/auth/me/delete")
+@router.post("/me/delete")
 async def update_account(request: Request):
     id = authorize_user(request)
     return await delete_user_account(id)
