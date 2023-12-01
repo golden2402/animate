@@ -1,4 +1,4 @@
-import getToken from "@/util/storage/token";
+import { getToken } from "@/util/storage/token";
 
 export default async function fetchWithToken(
   input: RequestInfo | URL,
