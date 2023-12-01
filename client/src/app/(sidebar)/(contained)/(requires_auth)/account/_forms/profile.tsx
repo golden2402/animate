@@ -23,19 +23,18 @@ export default function ProfileForm() {
   const [errorBuilders, errors] = useValidator({
     // personalization:
     displayName: [max(80, "Display name can't be longer than 80 characters.")],
-    blurb: [max(255, "Blurb can't be longer than 255 characters.")],
+    blurb: [max(255, "Blurb can't be longer than 255 characters.")]
   });
-  
+
   const validate = useValidationBinder(formState, errorBuilders);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // have to use a different signature here because the textarea isn't compliant
-  // 
   function handleInput(field: string, value: string) {
     setFormField(field, value);
     errorBuilders[field](value);
   }
-  
+
   return (
     <>
       <div>
@@ -56,7 +55,7 @@ export default function ProfileForm() {
                 name="displayName"
                 placeholder="What do you want to be called?"
                 onChange={(event) => {
-                  const { name: field, value } = event.currentTarget; 
+                  const { name: field, value } = event.currentTarget;
                   handleInput(field, value);
                 }}
               />
@@ -74,7 +73,7 @@ export default function ProfileForm() {
                 className="block h-36 resize-none"
                 placeholder="Say something about yourself..."
                 onChange={(event) => {
-                  const { name: field, value } = event.currentTarget; 
+                  const { name: field, value } = event.currentTarget;
                   handleInput(field, value);
                 }}
               />
@@ -92,31 +91,31 @@ export default function ProfileForm() {
           if (validate()) {
             const { displayName, ...rest } = formState;
 
-              setIsSubmitting(true);
+            setIsSubmitting(true);
 
-              const response = await fetchWithToken("/api/account/edit", {
-                method: "POST",
-                headers: { "content-type": "application/json" },
-                body: JSON.stringify({
-                  ...rest,
-                  display_name: displayName
-                })
-              });
-              const responseBody = await response.json();
+            const response = await fetchWithToken("/api/account/edit", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({
+                ...rest,
+                display_name: displayName
+              })
+            });
+            const responseBody = await response.json();
 
-              setIsSubmitting(false);
+            setIsSubmitting(false);
 
-              if (response.ok) {
-                console.log("Success!");
-                // reporting? since we're on the account page, we probably don't
-                // want to move off of it
-              }
+            if (response.ok) {
+              console.log("Success!");
+              // reporting? since we're on the account page, we probably don't
+              // want to move off of it
+            }
 
-              // not OK, so something (probably) abides by the response modeL:
-              if ((responseBody as ErrorResponseModel).detail) {
-                console.error(`Something went wrong: ${responseBody.detail}`);
-                // TODO: display this on the form itself
-              }
+            // not OK, so something (probably) abides by the response modeL:
+            if ((responseBody as ErrorResponseModel).detail) {
+              console.error(`Something went wrong: ${responseBody.detail}`);
+              // TODO: display this on the form itself
+            }
           }
         }}
         disabled={isSubmitting}
@@ -124,5 +123,5 @@ export default function ProfileForm() {
         Save
       </button>
     </>
-  )
+  );
 }

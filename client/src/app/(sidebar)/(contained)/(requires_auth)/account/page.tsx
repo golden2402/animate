@@ -9,6 +9,7 @@ import FieldErrorList from "@/components/forms/field-error-list";
 import FieldErrorPair from "@/components/forms/field-error-pair";
 import HiddenField from "@/components/forms/fields/hidden-field";
 
+import CredentialsForm from "./_forms/credentials";
 import ProfileForm from "./_forms/profile";
 
 export default function Account() {
@@ -67,73 +68,7 @@ export default function Account() {
         rounded
         fg fg-outline"
       >
-        <div>
-          <h2 className="text-xl font-bold">Credentials</h2>
-          <p className="text-sm text-neutral-500">
-            Let&apos;s make sure we got everything correct.
-          </p>
-        </div>
-
-        <div className="w-full h-[1px] bg-neutral-300" />
-
-        <div className="text-sm">
-          <h3 className="font-medium">Username</h3>
-          <p className="text-xs text-neutral-500">
-            This is how others discover you on AniMate.
-          </p>
-        </div>
-        <FieldErrorPair>
-          <Field>
-            <input
-              name="newUsername"
-              placeholder="New Username"
-              onChange={handleInput}
-            />
-          </Field>
-          <FieldErrorList errors={errors.newUsername} />
-        </FieldErrorPair>
-
-        <h3 className="text-sm font-medium">Change Password</h3>
-        <FieldErrorPair>
-          <Field>
-            <HiddenField
-              name="newPassword"
-              autoComplete="password"
-              placeholder="New Password"
-              onChange={handleInput}
-            />
-          </Field>
-          <FieldErrorList errors={errors.newPassword} />
-        </FieldErrorPair>
-
-        <div className="text-sm">
-          <h3 className="font-semibold">Verify</h3>
-          <p className="text-xs text-neutral-500">
-            Before we make these changes, we need to make sure it&apos;s you.
-          </p>
-        </div>
-
-        <h3 className="text-sm font-medium">Current Password</h3>
-        <FieldErrorPair>
-          <Field>
-            <HiddenField
-              name="oldPassword"
-              placeholder="Current Password"
-              onChange={handleInput}
-            />
-          </Field>
-          <FieldErrorList errors={errors.oldPassword} />
-        </FieldErrorPair>
-
-        <button
-          className="text-sm px-6 py-1 min-w-[6rem] w-fit rounded primary-box primary-shadow"
-          onClick={(event) => {
-            event.preventDefault();
-            // TODO: submit!
-          }}
-        >
-          Update
-        </button>
+        <CredentialsForm />
       </form>
 
       <form

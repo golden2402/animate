@@ -55,7 +55,7 @@ export default function LoginForm() {
   // if we have an existing access token, just go back to the home page:
   (async () => {
     const { ok: isAuthenticated } = await fetchWithToken("/api/account/login");
-  
+
     if (isAuthenticated) {
       router.push("/");
     }

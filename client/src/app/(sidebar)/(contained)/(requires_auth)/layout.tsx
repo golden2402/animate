@@ -11,7 +11,7 @@ export default function AuthenticatedLayout({
 }) {
   (async () => {
     const response = await fetchWithToken("/api/account/login");
-  
+
     if (!response || !response.ok) {
       redirect("/login");
     }
