@@ -63,7 +63,7 @@ async def update_account(follow: UpdateFollow, response: Response):
         )
 
 
-@router.delete("/unfollow/all{followee_id}")
+@router.delete("/unfollow/all/{followee_id}")
 async def update_account(followee_id: str, response: Response):
     await delete_all_follow_by_user(followee_id=followee_id)
     response.status = 200
