@@ -15,7 +15,7 @@ export default async function fetchWithToken(
   }
 
   return await fetch(input, {
+    ...requestData,
     headers: { ...requestData?.headers, Authorization: token },
-    ...requestData
   });
 }
