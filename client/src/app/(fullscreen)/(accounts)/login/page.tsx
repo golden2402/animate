@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 import { useFormState, useValidationBinder } from "@/hooks/form-state";
 import { useValidator } from "@/hooks/validation";
@@ -17,6 +17,7 @@ import FieldErrorPair from "@/components/forms/field-error-pair";
 
 import HiddenField from "@/components/forms/fields/hidden-field";
 
+import fetchWithToken from "@/util/api/fetch-with-token";
 import { setToken } from "@/util/storage/token";
 
 interface LoginFormState {
@@ -50,6 +51,15 @@ export default function LoginForm() {
     setFormField(field, value);
     errorBuilders[field](value);
   }
+
+  // if we have an existing access token, just go back to the home page:
+  (async () => {
+    const { ok: isAuthenticated } = await fetchWithToken("/api/account/login");
+  
+    if (isAuthenticated) {
+      router.push("/");
+    }
+  })();
 
   return (
     <section className="flex flex-col gap-4 p-12">

@@ -1,5 +1,5 @@
 import { apiUrl } from "@/util/api/api-url";
-import serverErrorResponse from "@/util/api/error-response";
+import serverErrorResponseModel from "@/util/api/error-response";
 
 export async function POST(request: Request) {
   try {
@@ -18,5 +18,5 @@ export async function POST(request: Request) {
     }
   }
 
-  return Response.json(serverErrorResponse, { status: 500 });
+  return Response.json(serverErrorResponseModel, { status: 500 });
 }

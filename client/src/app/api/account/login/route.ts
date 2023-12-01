@@ -1,5 +1,19 @@
 import { apiUrl } from "@/util/api/api-url";
-import serverErrorResponse from "@/util/api/error-response";
+import serverErrorResponseModel from "@/util/api/error-response";
+
+export async function GET(request: Request) {
+  const { headers } = request;
+
+  try {
+    return await fetch(apiUrl("/auth/login"), { headers: headers });
+  } catch (e: any) {
+    if (e instanceof Error) {
+      console.error(`Route handler threw: ${e}`);
+    }
+  }
+
+  return Response.json(serverErrorResponseModel, { status: 500 });
+}
 
 export async function POST(request: Request) {
   try {
@@ -18,5 +32,5 @@ export async function POST(request: Request) {
     }
   }
 
-  return Response.json(serverErrorResponse, { status: 500 });
+  return Response.json(serverErrorResponseModel, { status: 500 });
 }

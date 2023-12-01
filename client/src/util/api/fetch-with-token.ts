@@ -1,5 +1,9 @@
 import { getToken } from "@/util/storage/token";
 
+const noTokenResponseModel: ErrorResponseModel = {
+  detail: "No token was supplied."
+};
+
 export default async function fetchWithToken(
   input: RequestInfo | URL,
   requestData?: RequestInit
@@ -7,8 +11,7 @@ export default async function fetchWithToken(
   const token = getToken();
 
   if (!token) {
-    // FIXME: spoofing--good for usage of "ok", bad for all other cases:
-    return null;
+    return Response.json(noTokenResponseModel, { status: 400 });
   }
 
   return await fetch(input, {
