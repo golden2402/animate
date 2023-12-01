@@ -1,9 +1,6 @@
 from datetime import datetime, timedelta
-from models.user_account_model import (
-    ErrorResponseModel,
-    ResponseModel,
-    UpdateUserAccount,
-)
+from models.response_models import ErrorResponseModel, ResponseModel
+from models.user_account_model import UpdateUserAccount
 from jose import JWTError, jwt
 import db
 import bcrypt

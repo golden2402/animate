@@ -20,13 +20,17 @@ async def does_anime_exists(anime: UpdateAnime):
 
 async def create_anime(anime: UpdateAnime):
     if anime["season_id"]:
-        return await db.run_statements(
-            f"insert into anime (id, title, season_id) values ( '{anime['id']}', '{anime['title']}', '{anime['season_id']}')"
-        )
+        return (
+            await db.run_statements(
+                f"insert into anime (id, title, season_id) values ( '{anime['id']}', '{anime['title']}', '{anime['season_id']}')"
+            )
+        )[0]
     else:
-        return await db.run_statements(
-            f"insert into anime (id, title) values ( '{anime['id']}', '{anime['title']}')"
-        )
+        return (
+            await db.run_statements(
+                f"insert into anime (id, title) values ( '{anime['id']}', '{anime['title']}')"
+            )
+        )[0]
 
 
 async def get_anime_by_id(id: str):
@@ -68,14 +72,15 @@ async def delete_episode(id: str):
 
 
 async def does_genre_exists(genre: UpdateGenre):
-    return await db.run_statements(
-        f"select * from genre where genre_name = '{genre.genre_name}'"
+    val = await db.run_statements(
+        f"select * from genre where genre_name = '{genre['genre_name']}'"
     )
+    return val[0]
 
 
 async def create_genre(genre: UpdateGenre):
     return await db.run_statements(
-        f"insert into genre (genre_name) values ( '{genre.genre_name}')"
+        f"insert into genre (id, genre_name) values ('{genre['id']}', '{genre['genre_name']}')"
     )
 
 
@@ -86,11 +91,15 @@ async def get_genre_by_id(id: str):
 async def get_genre_by_name(name: str):
     return (
         await db.run_statements(f"select * from genre where genre_name = '{name}'")
-    )[0][0]
+    )[0]
 
 
 async def delete_genre(id: str):
     return await db.run_statements(f"delete from genre where id = {id}")
+
+
+async def get_all_genres():
+    return (await db.run_statements(f"select * from genre"))[0]
 
 
 ##################### SEASON #####################################
@@ -101,9 +110,6 @@ async def does_season_exists(season: UpdateSeason):
         f"select * from season where season_name = '{season['season_name']}' AND season_year = '{season['season_year']}'"
     )
     return val[0]
-    return await db.run_statements(
-        f"select * from season where season_name = '{season['season_name']}' AND season_year = '{season['season_year']}'"
-    )[0][0]
 
 
 async def create_season(season: UpdateSeason):
@@ -148,3 +154,16 @@ async def get_producer_by_name(name: str):
 
 async def delete_producer(id: str):
     return await db.run_statements(f"delete from producer where id = {id}")
+
+
+##################### ANIME GENRE RELATIONSHIP #####################################
+
+
+async def get_all_anime_genre_relationships():
+    return (await db.run_statements(f"select * from anime_genre"))[0]
+
+
+async def create_anime_genre_relationship(anime: UpdateAnime, genre: UpdateGenre):
+    return await db.run_statements(
+        f"insert into anime_genre (anime_id, genre_id) values ( '{anime['id']}', '{genre['id']}')"
+    )

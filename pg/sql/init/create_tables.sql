@@ -65,8 +65,7 @@ create table if not exists
 create table if not exists
   episode (
     id integer primary key,
-    episode_number smallint not null,
-    episode_name varchar(80)
+    episode_number smallint not null
   );
 
 create table if not exists

@@ -1,7 +1,7 @@
 import requests
 from models.anime_model import UpdateAnime
 from models.season_model import UpdateSeason
-from db.anime import does_season_exists, create_season, create_anime, get_anime_by_id
+from db.anime import *
 
 
 async def populate_anime():
@@ -38,6 +38,7 @@ async def populate_anime():
         for anime in page_data:
             anime["title"] = anime["title"].replace("'", "''")
 
+            ## season stuffz
             season_dict: UpdateSeason = {
                 "season_year": anime["year"],
                 "season_name": anime["season"],
@@ -53,8 +54,6 @@ async def populate_anime():
                     "season_id": season_check[0]["id"] if season_check[0] else None,
                 }
                 if not await get_anime_by_id(anime_dict["id"]):
-                    print("creating anime with season")
-                    print(anime_dict)
                     await create_anime(anime_dict)
             else:
                 anime_dict: UpdateAnime = {
@@ -65,5 +64,26 @@ async def populate_anime():
                 if not await get_anime_by_id(anime_dict["id"]):
                     await create_anime(anime_dict)
 
-        if current_page > 5:
+            # get newly created anime
+            created_anime = await get_anime_by_id(anime_dict["id"])
+
+            # Genre stuffz
+            genres = anime["genres"]
+            for genre in genres:
+                genre_dict: UpdateGenre = {
+                    "id": genre["mal_id"],
+                    "genre_name": genre["name"],
+                }
+                if not await does_genre_exists(genre_dict):
+                    # create da genre
+                    await create_genre(genre_dict)
+
+                # get da genre
+                genre_from_db = await get_genre_by_name(genre_dict["genre_name"])
+                if genre_from_db and genre_from_db[0]:
+                    await create_anime_genre_relationship(
+                        anime=created_anime[0], genre=genre_from_db[0]
+                    )
+
+        if current_page > 2:
             break
