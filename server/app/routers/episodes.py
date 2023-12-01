@@ -8,9 +8,9 @@ router = APIRouter()
 
 @router.get("/")
 async def get_all(request: Request):
-    return await get_all_genres()
+    return await get_all_anime_episode_relationships()
 
 
 @router.get("/relationships")
-async def get_all_ag_relationship():
-    return await get_all_anime_genre_relationships()
+async def get_all_relationships():
+    return await get_all_anime_episode_relationships()

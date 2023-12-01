@@ -14,8 +14,3 @@ async def get_all(request: Request):
 @router.get("/populate")
 async def populate():
     return await populate_anime()
-
-
-@router.get("/genres/relationships")
-async def get_all_ag_relationship():
-    return await get_all_anime_genre_relationships()

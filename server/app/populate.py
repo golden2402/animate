@@ -1,6 +1,7 @@
 import requests
 from models.anime_model import UpdateAnime
 from models.season_model import UpdateSeason
+from models.producer_model import UpdateProducer
 from db.anime import *
 
 
@@ -85,5 +86,51 @@ async def populate_anime():
                         anime=created_anime[0], genre=genre_from_db[0]
                     )
 
-        if current_page > 2:
+            # Episode stuff
+            if anime["episodes"]:
+                for x in range(1, anime["episodes"] + 1):
+                    new_episode = await create_episode(x)
+                    if new_episode and new_episode[0]:
+                        created_episode = await get_episode_by_id(new_episode[0]["id"])
+                        await create_anime_episode_relationship(
+                            anime=created_anime[0], episode=created_episode
+                        )
+
+            # Studio/producer
+            for studio in anime["studios"]:
+                # https://api.jikan.moe/v4/producers/{id}
+                print(studio["mal_id"])
+                studio_url = "https://api.jikan.moe/v4/producers/" + str(
+                    studio["mal_id"]
+                )
+                print(studio_url)
+                studio_response = requests.get(
+                    studio_url,
+                    headers=headers,
+                )
+                studio_response.raise_for_status()
+
+                if not studio_response.content:
+                    return
+
+                studio_response_page_data = studio_response.json()["data"]
+                studio_dict: UpdateProducer = {
+                    "id": studio["mal_id"],
+                    "studio_name": studio["name"],
+                    "studio_blurb": studio_response_page_data["about"]
+                    if studio_response_page_data["about"]
+                    else "None",
+                    "studio_year": studio_response_page_data["established"],
+                }
+                if not await does_producer_exists(studio_dict["id"]):
+                    # create da producer
+                    await create_producer(studio_dict)
+
+                created_producer = await get_producer_by_id(studio_dict["id"])
+                if created_producer:
+                    await create_anime_producer_relationship(
+                        anime=created_anime[0], producer=created_producer
+                    )
+
+        if current_page > 5:
             break

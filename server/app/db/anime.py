@@ -54,10 +54,12 @@ async def does_episode_exists(episode: UpdateEpisode):
     )
 
 
-async def create_episode(episode: UpdateEpisode):
-    return await db.run_statements(
-        f"insert into episode (episode_number, episode_name) values ( '{episode.episode_number}', '{episode.episode_name}')"
-    )
+async def create_episode(episode: int):
+    return (
+        await db.run_statements(
+            f"insert into episode (episode_number) values ( '{episode}') RETURNING id"
+        )
+    )[0]
 
 
 async def get_episode_by_id(id: str):
@@ -130,15 +132,13 @@ async def delete_season(id: str):
 ##################### PRODUCER #####################################
 
 
-async def does_producer_exists(producer: UpdateProducer):
-    return await db.run_statements(
-        f"select * from producer where studio_name = '{producer.studio_name}'"
-    )
+async def does_producer_exists(id: str):
+    return (await db.run_statements(f"select * from producer where id = '{id}'"))[0]
 
 
 async def create_producer(producer: UpdateProducer):
     return await db.run_statements(
-        f"insert into producer (studio_name, studio_year, studio_blurb) values ( '{producer.studio_name}', '{producer.studio_year}', `{producer.studio_blurb})"
+        f"insert into producer (id, studio_name, studio_year, studio_blurb) values ('{producer['id']}', '{producer['studio_name']}', '{producer['studio_year']}', '{producer['studio_blurb']}')"
     )
 
 
@@ -156,6 +156,10 @@ async def delete_producer(id: str):
     return await db.run_statements(f"delete from producer where id = {id}")
 
 
+async def get_all_producers():
+    return (await db.run_statements(f"select * from producer"))[0]
+
+
 ##################### ANIME GENRE RELATIONSHIP #####################################
 
 
@@ -166,4 +170,32 @@ async def get_all_anime_genre_relationships():
 async def create_anime_genre_relationship(anime: UpdateAnime, genre: UpdateGenre):
     return await db.run_statements(
         f"insert into anime_genre (anime_id, genre_id) values ( '{anime['id']}', '{genre['id']}')"
+    )
+
+
+##################### ANIME EPISODE RELATIONSHIP #####################################
+
+
+async def get_all_anime_episode_relationships():
+    return (await db.run_statements(f"select * from anime_episode"))[0]
+
+
+async def create_anime_episode_relationship(anime: UpdateAnime, episode: UpdateEpisode):
+    return await db.run_statements(
+        f"insert into anime_episode (anime_id, episode_id) values ( '{anime['id']}', '{episode['id']}')"
+    )
+
+
+##################### ANIME PRODUCER RELATIONSHIP #####################################
+
+
+async def get_all_anime_producer_relationship():
+    return (await db.run_statements(f"select * from produced_by"))[0]
+
+
+async def create_anime_producer_relationship(
+    anime: UpdateAnime, producer: UpdateProducer
+):
+    return await db.run_statements(
+        f"insert into produced_by (anime_id, producer_id) values ( '{anime['id']}', '{producer['id']}')"
     )

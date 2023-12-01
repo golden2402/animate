@@ -112,8 +112,8 @@ create table if not exists
   producer (
     id integer primary key,
     studio_name varchar(80),
-    studio_year date_year,
-    studio_blurb varchar(2047)
+    studio_year date,
+    studio_blurb varchar(4093)
   );
 
 create table if not exists
