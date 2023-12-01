@@ -5,8 +5,8 @@ import { ErrorBuilderMapping } from "./validation";
 
 export type FormState = Record<string, any>;
 
-export function useFormState(baseFormState: FormState) {
-  const [formState, setFormState] = useState<FormState>(baseFormState);
+export function useFormState<T>(baseFormState: T) {
+  const [formState, setFormState] = useState<T>(baseFormState);
 
   function setFormField(field: string, value: any) {
     setFormState((currentFormState) => ({
