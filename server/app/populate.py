@@ -24,7 +24,6 @@ async def populate_anime(current_page):
     count = 0
     for anime in page_data:
         anime["title"] = anime["title"].replace("'", "''")
-
         ## season stuffz
         season_dict: UpdateSeason = {
             "season_year": anime["year"],

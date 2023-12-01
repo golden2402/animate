@@ -27,6 +27,10 @@ router = APIRouter()
 
 @router.post("/register")
 async def register_user(user: UpdateUserAccount):
+    if user.display_name:
+        user.display_name = user.display_name.replace("'", "''")
+    if user.blurb:
+        user.blurb = user.blurb.replace("'", "''")
     return await try_register(user)
 
 
@@ -51,7 +55,10 @@ async def login_user(request: Request):
 async def update_account(user: UpdateUserAccount, request: Request):
     id = authorize_user(request)
     auth_user = await get_current_user(id)
-
+    if user.display_name:
+        user.display_name = user.display_name.replace("'", "''")
+    if user.blurb:
+        user.blurb = user.blurb.replace("'", "''")
     if user.user_password:
         user.user_password = await hash_password(user.user_password)
 
