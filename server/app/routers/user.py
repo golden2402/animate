@@ -1,4 +1,5 @@
 from models.follow_model import UpdateFollow
+from models.favorite_model import UpdateFavorite
 from models.response_models import ResponseModel, ErrorResponseModel
 from fastapi import APIRouter, Request, Response, status
 from db.user_account import *
@@ -68,3 +69,47 @@ async def update_account(followee_id: str, response: Response):
     await delete_all_follow_by_user(followee_id=followee_id)
     response.status = 200
     return response
+
+
+################ Favoriting actions ##############################
+
+
+@router.get("/favorites/{user_id}")
+async def get_all(user_id: str, response: Response):
+    return await get_all_favorites_by_user(user_id=user_id)
+
+
+@router.delete("/unfavorite")
+async def get_all(favorite_obj: UpdateFavorite, response: Response):
+    await delete_favorite_relation(
+        user_id=favorite_obj.user_id, anime_id=favorite_obj.anime_id
+    )
+    response.status = 200
+    return response
+
+
+@router.delete("/unfavorite/all/{user_id}")
+async def get_all(user_id: str, response: Response):
+    await delete_all_favorites_by_user(user_id=user_id)
+    response.status = 200
+    return response
+
+
+@router.post("/favorite")
+async def update_account(favorite_obj: UpdateFavorite, response: Response):
+    if not await is_user_favoriting(
+        user_id=favorite_obj.user_id, anime_id=favorite_obj.anime_id
+    ):
+        created_obj = await create_favorite_relation(
+            user_id=favorite_obj.user_id, anime_id=favorite_obj.anime_id
+        )
+        if created_obj:
+            response.status_code = 201
+            return created_obj
+        else:
+            response.status_code = 500
+    else:
+        response.status_code = 409
+        return ErrorResponseModel(
+            "User is has already favorited anime",
+        )
