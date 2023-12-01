@@ -2,10 +2,6 @@ import { apiUrl } from "@/util/api/api-url";
 import serverErrorResponse from "@/util/api/error-response";
 
 export async function POST(request: Request) {
-  const { headers } = request;
-
-  console.log(headers);
-
   try {
     const response = await fetch(apiUrl("/auth/register"), {
       method: "POST",
