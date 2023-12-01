@@ -7,15 +7,17 @@ from models.review_model import UpdateReview
 
 
 async def is_user_following(followee_id: str, follower_id: str):
-    return await db.run_statements(
-        f"select * from follow where followee_id = '{followee_id}' and follower_id = '{follower_id}'"
-    )
+    return (
+        await db.run_statements(
+            f"select * from follow where followee_id = '{followee_id}' and follower_id = '{follower_id}'"
+        )
+    )[0]
 
 
 async def create_follow_relation(followee_id: str, follower_id: str):
     return (
         await db.run_statements(
-            f"insert into follow (followee_id, follower_id) values ( '{followee_id}', '{follower_id}')"
+            f"insert into follow (followee_id, follower_id) values ( '{followee_id}', '{follower_id}') RETURNING followee_id, follower_id"
         )
     )[0]
 
@@ -26,8 +28,26 @@ async def delete_follow_relation(followee_id: str, follower_id: str):
     )
 
 
-async def delete_all_follow_by_user(user_id: str):
-    return await db.run_statements(f"delete from follow where user_id = '{user_id}'")
+async def delete_all_follow_by_user(followee_id: str):
+    return await db.run_statements(
+        f"delete from follow where followee_id = '{followee_id}'"
+    )
+
+
+async def get_all_followees(followee_id: str):
+    return (
+        await db.run_statements(
+            f"select * from follow where followee_id = '{followee_id}'"
+        )
+    )[0]
+
+
+async def get_all_followers(follower_id: str):
+    return (
+        await db.run_statements(
+            f"select * from follow where follower_id = '{follower_id}'"
+        )
+    )[0]
 
 
 async def get_all_relationships():
@@ -192,3 +212,6 @@ async def get_reviews_by_episode(episode_id: str):
 
 async def get_all_reviews():
     return (await db.run_statements(f"select * from review"))[0]
+
+
+############################ MISC ##################
