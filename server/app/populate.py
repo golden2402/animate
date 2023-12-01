@@ -49,7 +49,7 @@ async def populate_anime(current_page):
         anime_dict: UpdateAnime = {
             "id": anime["mal_id"],
             "title": anime["title"],
-            "episodes": anime["episodes"],
+            "episodes": anime["episodes"] if anime["episodes"] else 0,
             "season_id": season["id"] if season and season["id"] else None,
         }
         if not await get_anime_by_id(anime["mal_id"]):
