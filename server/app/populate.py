@@ -61,6 +61,7 @@ async def populate_anime(current_page):
         # Genre stuffz
         genres = anime["genres"]
         for genre in genres:
+            genre["genre_nameitle"] = genre["genre_name"].replace("'", "''")
             genre_dict: UpdateGenre = {
                 "id": genre["mal_id"],
                 "genre_name": genre["name"],
@@ -114,6 +115,9 @@ async def populate_anime(current_page):
                     else date.today(),
                 }
                 studio_dict["studio_blurb"] = studio_dict["studio_blurb"].replace(
+                    "'", "''"
+                )
+                studio_dict["studio_name"] = studio_dict["studio_name"].replace(
                     "'", "''"
                 )
                 # create da producer
