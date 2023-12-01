@@ -17,7 +17,7 @@ async def create_anime(anime: UpdateAnime):
     if anime["season_id"]:
         return (
             await db.run_statements(
-                f"insert into anime (id, title, season_id) values ( '{anime['id']}', '{anime['title']}', '{anime['season_id']}')"
+                f"insert into anime (id, title, episodes,  season_id) values ( '{anime['id']}', '{anime['title']}', '{anime['episodes']}','{anime['season_id']}')"
             )
         )[0]
     else:
@@ -80,9 +80,12 @@ async def does_genre_exists(genre: UpdateGenre):
 
 
 async def create_genre(genre: UpdateGenre):
-    return await db.run_statements(
-        f"insert into genre (id, genre_name) values ('{genre['id']}', '{genre['genre_name']}')"
-    )
+    try:
+        return await db.run_statements(
+            f"insert into genre (id, genre_name) values ('{genre['id']}', '{genre['genre_name']}')"
+        )
+    except:
+        print("Probably tried adding duplicate genre")
 
 
 async def get_genre_by_id(id: str):

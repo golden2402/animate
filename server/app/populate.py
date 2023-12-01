@@ -20,7 +20,7 @@ async def populate_anime(current_page):
         print("ERRROORRR")
 
     page_data = response.json()["data"]
-    print(datetime.now())
+    print(f"Starting PAGE: '{current_page}': '{datetime.now()}'")
     count = 0
     for anime in page_data:
         anime["title"] = anime["title"].replace("'", "''")
@@ -49,6 +49,7 @@ async def populate_anime(current_page):
         anime_dict: UpdateAnime = {
             "id": anime["mal_id"],
             "title": anime["title"],
+            "episodes": anime["episodes"],
             "season_id": season["id"] if season and season["id"] else None,
         }
         if not await get_anime_by_id(anime["mal_id"]):
@@ -124,5 +125,4 @@ async def populate_anime(current_page):
                 await create_anime_producer_relationship(
                     anime=created_anime[0], producer=created_producer
                 )
-    print(datetime.now())
-    print(count)
+    print(f"Ending PAGE: '{current_page}': '{datetime.now()}' added: '{count}'")
