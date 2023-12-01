@@ -11,6 +11,7 @@ from routers.follow import router as FollowRouter
 from routers.favorite import router as FavoriteRouter
 from routers.watch import router as WatchRouter
 from routers.rating import router as RatingRouter
+from routers.review import router as ReviewRouter
 
 from fastapi import FastAPI
 import asyncio
@@ -31,6 +32,7 @@ app.include_router(FollowRouter, tags=["follow"], prefix="/follow")
 app.include_router(FavoriteRouter, tags=["favorite"], prefix="/favorite")
 app.include_router(WatchRouter, tags=["watch"], prefix="/watch")
 app.include_router(RatingRouter, tags=["rating"], prefix="/rating")
+app.include_router(ReviewRouter, tags=["review"], prefix="/review")
 
 
 @app.get("/")
