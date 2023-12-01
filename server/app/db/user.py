@@ -114,6 +114,12 @@ async def delete_watched_episode_relation(user_id: str, episode_id: str):
     )
 
 
+async def delete_all_watched_episodes(user_id: str):
+    return await db.run_statements(
+        f"delete from watched_episodes where user_id = '{user_id}'"
+    )
+
+
 async def get_all_watched_episodes_by_user(user_id: str):
     return (
         await db.run_statements(
