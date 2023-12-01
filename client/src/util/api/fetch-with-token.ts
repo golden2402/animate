@@ -11,5 +11,8 @@ export default async function fetchWithToken(
     return null;
   }
 
-  return await fetch(input);
+  return await fetch(input, {
+    headers: { ...requestData?.headers, Authorization: token },
+    ...requestData
+  });
 }

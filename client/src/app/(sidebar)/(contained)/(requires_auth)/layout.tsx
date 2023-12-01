@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
-import { apiUrl } from "@/api/api-url";
-import fetchWithToken from "@/api/fetch-with-token";
+import fetchWithToken from "@/util/api/fetch-with-token";
+import { apiUrl } from "@/util/api/api-url";
 
 export default async function AuthenticatedLayout({
   children

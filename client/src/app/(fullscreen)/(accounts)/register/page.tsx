@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 
 import { useFormState, useValidationBinder } from "@/hooks/form-state";
 import { useValidator } from "@/hooks/validation";
@@ -18,8 +19,16 @@ import FieldErrorPair from "@/components/forms/field-error-pair";
 
 import HiddenField from "@/components/forms/fields/hidden-field";
 
+interface RegisterFormState {
+  email?: any;
+  username?: any;
+  password?: any;
+}
+
 export default function RegisterForm() {
-  const { formState, setFormField } = useFormState({});
+  const router = useRouter();
+
+  const { formState, setFormField } = useFormState<RegisterFormState>({});
   const [errorBuilders, errors] = useValidator({
     email: [
       required("Email is required!"),
@@ -41,6 +50,7 @@ export default function RegisterForm() {
   });
 
   const validate = useValidationBinder(formState, errorBuilders);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function handleInput(event: FormEvent<HTMLInputElement>) {
     const { name: field, value } = event.currentTarget;
@@ -92,13 +102,35 @@ export default function RegisterForm() {
 
         <button
           className="primary-box rounded p-2"
-          onClick={(event) => {
+          onClick={async (event) => {
             event.preventDefault();
 
             if (validate()) {
-              // TODO
+              const { password, ...rest } = formState;
+
+              // lock?:
+              setIsSubmitting(true);
+              const response = await fetch("/api/account/register", {
+                method: "POST",
+                body: JSON.stringify({
+                  ...rest,
+                  user_password: password
+                })
+              });
+              setIsSubmitting(false);
+
+              if (response.ok) {
+                router.push("/login");
+              }
+
+              // not OK, so something (probably) abides by the response modeL:
+              const responseModel: ErrorResponseModel = await response.json();
+              if (responseModel.detail) {
+                console.error(`Something went wrong: ${responseModel.detail}`);
+              }
             }
           }}
+          disabled={isSubmitting}
         >
           Sign up
         </button>
