@@ -97,15 +97,18 @@ async def get_all_favorites():
 
 
 async def has_user_watched(user_id: str, anime_id: str):
-    return await db.run_statements(
-        f"select * from watched_anime where user_id = '{user_id}' and anime_id = '{anime_id}'"
-    )
+    return (
+        await db.run_statements(
+            f"select * from watched_anime where user_id = '{user_id}' and anime_id = '{anime_id}'"
+        )
+    )[0]
 
 
 async def create_watched_anime_relation(watched_anime: UpdateWatchedAnime):
+    print(watched_anime)
     return (
         await db.run_statements(
-            f"insert into watched_anime (user_id, anime_id, watch_count, watch_date) values ( '{watched_anime['user_id']}', '{watched_anime['anime_id']}', '{watched_anime['watch_count']}', '{watched_anime['watch_date']}')"
+            f"insert into watched_anime (user_id, anime_id, watch_count, watch_date) values ( '{watched_anime.user_id}', '{watched_anime.anime_id}', '{watched_anime.watch_count}', '{watched_anime.watch_date}')"
         )
     )[0]
 
@@ -122,7 +125,7 @@ async def delete_all_watched_anime(user_id: str):
     )
 
 
-async def get_all_watched_anime_by_user(user_id: str):
+async def get_all_watched_anime_by_user_db(user_id: str):
     return (
         await db.run_statements(
             f"select * from watched_anime where user_id = '{user_id}'"
