@@ -7,17 +7,17 @@ router = APIRouter()
 
 
 @router.get("/{user_id}")
-async def get_all(user_id: str, response: Response):
+async def get_all_followers(user_id: str, response: Response):
     return await get_all_followers(follower_id=user_id)
 
 
 @router.get("/followees/{user_id}")
-async def get_all(user_id: str, response: Response):
+async def get_all_followees(user_id: str, response: Response):
     return await get_all_followees(followee_id=user_id)
 
 
 @router.post("/")
-async def update_account(follow: UpdateFollow, response: Response):
+async def follow_user(follow: UpdateFollow, response: Response):
     if not await is_user_following(
         followee_id=follow.followee_id, follower_id=follow.follower_id
     ):
@@ -37,7 +37,7 @@ async def update_account(follow: UpdateFollow, response: Response):
 
 
 @router.delete("/")
-async def update_account(follow: UpdateFollow, response: Response):
+async def delete_followee(follow: UpdateFollow, response: Response):
     if not await is_user_following(
         followee_id=follow.followee_id, follower_id=follow.follower_id
     ):
@@ -53,7 +53,7 @@ async def update_account(follow: UpdateFollow, response: Response):
 
 
 @router.delete("/all/{followee_id}")
-async def update_account(followee_id: str, response: Response):
+async def delete_all_follow_by_user(followee_id: str, response: Response):
     await delete_all_follow_by_user(followee_id=followee_id)
     response.status = 200
     return response

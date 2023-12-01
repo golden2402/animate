@@ -6,29 +6,29 @@ from db.user import *
 router = APIRouter()
 
 
-@router.get("/ratings/{user_id}")
-async def get_all(user_id: str, response: Response):
+@router.get("/{user_id}")
+async def get_ratings_by_user(user_id: str, response: Response):
     return await get_ratings_by_user(user_id=user_id)
 
 
-@router.get("/ratings/{score}")
-async def get_all(score: int, response: Response):
+@router.get("/{score}")
+async def get_ratings_by_score(score: int, response: Response):
     return await get_ratings_by_score(score=score)
 
 
-@router.get("/ratings/{episode_id}")
-async def get_all(episode_id: str, response: Response):
+@router.get("/{episode_id}")
+async def get_ratings_by_episode(episode_id: str, response: Response):
     return await get_ratings_by_episode(episode_id=episode_id)
 
 
-@router.delete("/rate")
-async def get_all(rating: UpdateRating, response: Response):
+@router.delete("/")
+async def delete_rating(rating: UpdateRating, response: Response):
     await delete_rating_relation(user_id=rating.user_id, episode_id=rating.episode_id)
     response.status = 200
     return response
 
 
-@router.post("/rate")
+@router.post("/")
 async def create_rating(rating: UpdateRating, response: Response):
     if not await has_user_rated_episode(
         user_id=rating.user_id, episode_id=rating.episode_id
