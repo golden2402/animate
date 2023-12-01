@@ -58,9 +58,11 @@ async def get_all_relationships():
 
 
 async def is_user_favoriting(user_id: str, anime_id: str):
-    return await db.run_statements(
-        f"select * from favorite where user_id = '{user_id}' and anime_id = '{anime_id}'"
-    )
+    return (
+        await db.run_statements(
+            f"select * from favorite where user_id = '{user_id}' and anime_id = '{anime_id}'"
+        )
+    )[0]
 
 
 async def create_favorite_relation(user_id: str, anime_id: str):
@@ -81,7 +83,7 @@ async def delete_all_favorites_by_user(user_id: str):
     return await db.run_statements(f"delete from favorite where user_id = '{user_id}'")
 
 
-async def get_all_favorites_by_user(user_id: str):
+async def get_all_favorites_by_user_db(user_id: str):
     return (
         await db.run_statements(f"select * from favorite where user_id = '{user_id}'")
     )[0]

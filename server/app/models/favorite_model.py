@@ -12,4 +12,4 @@ class UpdateFavorite(BaseModel):
     anime_id: Optional[str] = None
 
     class Config:
-        json_schema_extra = {"example": {"id": "1", "title": "2"}}
+        json_schema_extra = {"example": {"user_id": "1", "anime_id": "57356"}}
