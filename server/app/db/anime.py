@@ -115,13 +115,21 @@ async def does_season_exists(season: UpdateSeason):
 
 async def create_season(season: UpdateSeason):
     val = await db.run_statements(
-        f"insert into season (season_year, season_name) values ( '{season['season_year']}', '{season['season_name']}')"
+        f"insert into season (season_year, season_name) values ( '{season['season_year']}', '{season['season_name']}') RETURNING id"
     )
     return val
 
 
 async def get_season_by_id(id: str):
     return (await db.run_statements(f"select * from season where id = '{id}'"))[0][0]
+
+
+async def get_season_by_all_info(season_name: str, season_year: str):
+    return (
+        await db.run_statements(
+            f"select * from season where season_name = '{season_name}' and season_year = '{season_year}'"
+        )
+    )[0]
 
 
 async def delete_season(id: str):
