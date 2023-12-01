@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 
+import { useFormState, useValidationBinder } from "@/hooks/form-state";
 import { useValidator } from "@/hooks/validation";
 
 import required from "@/hooks/validation/validators/required";
@@ -15,7 +17,22 @@ import FieldErrorPair from "@/components/forms/field-error-pair";
 
 import HiddenField from "@/components/forms/fields/hidden-field";
 
+import { setToken } from "@/util/storage/token";
+
+interface LoginFormState {
+  username?: string;
+  password?: string;
+}
+
+interface LoginResponseModel {
+  access_token: string;
+  bearer: string;
+}
+
 export default function LoginForm() {
+  const router = useRouter();
+
+  const { formState, setFormField } = useFormState<LoginFormState>({});
   const [errorBuilders, errors] = useValidator({
     username: [required("Username is required!")],
     password: [
@@ -24,8 +41,13 @@ export default function LoginForm() {
     ]
   });
 
+  const validate = useValidationBinder(formState, errorBuilders);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   function handleInput(event: FormEvent<HTMLInputElement>) {
     const { name: field, value } = event.currentTarget;
+
+    setFormField(field, value);
     errorBuilders[field](value);
   }
 
@@ -60,10 +82,45 @@ export default function LoginForm() {
 
         <button
           className="primary-box rounded p-2"
-          onClick={(event) => {
+          onClick={async (event) => {
             event.preventDefault();
-            // TODO: submit here!
+
+            if (validate()) {
+              const { password, ...rest } = formState;
+
+              setIsSubmitting(true);
+
+              const response = await fetch("/api/account/login", {
+                method: "POST",
+                body: JSON.stringify({
+                  ...rest,
+                  user_password: password
+                })
+              });
+              const responseBody = await response.json();
+
+              setIsSubmitting(false);
+
+              if (response.ok) {
+                const { access_token: accessToken }: LoginResponseModel =
+                  responseBody;
+
+                if (accessToken) {
+                  setToken(accessToken);
+                  return router.push("/");
+                }
+
+                // didn't get an access token? what do we do?
+              }
+
+              // not OK, so something (probably) abides by the response modeL:
+              if ((responseBody as ErrorResponseModel).detail) {
+                console.error(`Something went wrong: ${responseBody.detail}`);
+                // TODO: display this on the form itself
+              }
+            }
           }}
+          disabled={isSubmitting}
         >
           Sign in
         </button>
