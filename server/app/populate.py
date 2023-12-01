@@ -11,18 +11,8 @@ async def populate_anime():
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
     }
 
-    # response = requests.get("https://api.jikan.moe/v4/anime/", headers=headers)
-    # response.raise_for_status()
-
-    # if not response.content:
-    #     return
-
-    # # print(response.json()["pagination"])
-    # total_pages = response.json()["pagination"]["last_visible_page"]
-    # print(total_pages)
-    # has_next_page = response.json()["pagination"]["has_next_page"]
     current_page = 1031
-    while current_page > 1028:
+    while current_page > 1020:
         print(current_page)
         response = requests.get(
             "https://api.jikan.moe/v4/anime/?page=" + str(current_page), headers=headers
@@ -35,7 +25,6 @@ async def populate_anime():
 
         page_data = response.json()["data"]
         current_page -= 1
-        has_next_page = response.json()["pagination"]["has_next_page"]
 
         for anime in page_data:
             anime["title"] = anime["title"].replace("'", "''")
@@ -100,11 +89,9 @@ async def populate_anime():
             # Studio/producer
             for studio in anime["studios"]:
                 # https://api.jikan.moe/v4/producers/{id}
-                print(studio["mal_id"])
                 studio_url = "https://api.jikan.moe/v4/producers/" + str(
                     studio["mal_id"]
                 )
-                print(studio_url)
                 studio_response = requests.get(
                     studio_url,
                     headers=headers,
@@ -137,6 +124,3 @@ async def populate_anime():
                     await create_anime_producer_relationship(
                         anime=created_anime[0], producer=created_producer
                     )
-
-        if current_page < 1028:
-            break

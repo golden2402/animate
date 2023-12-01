@@ -1,7 +1,5 @@
 import db
 from models.anime_model import UpdateAnime
-from models.anime_episode_model import UpdateAnimeEpisode
-from models.anime_genre_model import UpdateAnimeGenre
 from models.episode_model import UpdateEpisode
 from models.genre_model import UpdateGenre
 from models.season_model import UpdateSeason
