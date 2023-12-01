@@ -136,6 +136,10 @@ async def delete_season(id: str):
     return await db.run_statements(f"delete from season where id = {id}")
 
 
+async def get_all_seasons():
+    return (await db.run_statements(f"select * from season"))[0]
+
+
 ##################### PRODUCER #####################################
 
 
