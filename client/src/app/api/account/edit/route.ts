@@ -3,11 +3,9 @@ import serverErrorResponseModel from "@/util/api/error-response";
 
 export async function POST(request: Request) {
   try {
-    return await fetch(apiUrl("/auth/register"), {
+    return await fetch(apiUrl("/auth/me/update"), {
       method: "POST",
-      headers: {
-        "content-type": "application/json"
-      },
+      headers: request.headers,
       body: JSON.stringify(await request.json())
     });
   } catch (e: any) {

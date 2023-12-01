@@ -3,19 +3,16 @@
 import { FormEvent } from "react";
 
 import { useValidator } from "@/hooks/validation";
-import { max } from "@/hooks/validation/validators/range";
 
 import Field from "@/components/forms/field-wrapper";
 import FieldErrorList from "@/components/forms/field-error-list";
 import FieldErrorPair from "@/components/forms/field-error-pair";
 import HiddenField from "@/components/forms/fields/hidden-field";
 
+import ProfileForm from "./_forms/profile";
+
 export default function Account() {
   const [errorBuilders, errors] = useValidator({
-    // personalization:
-    displayName: [max(80, "Display name can't be longer than 80 characters.")],
-    blurb: [max(255, "Blurb can't be longer than 255 characters.")],
-
     // credentials:
     // TODO:
     newUsername: [],
@@ -60,55 +57,7 @@ export default function Account() {
         rounded
         fg fg-outline"
       >
-        <div>
-          <h2 className="text-xl font-bold">Profile</h2>
-          <p className="text-sm text-neutral-500">
-            How do you want to appear on AniMate?
-          </p>
-        </div>
-
-        <div className="w-full h-[1px] bg-neutral-300" />
-
-        <div className="flex flex-col gap-2">
-          <div className="max-w-xl">
-            <h3 className="text-sm font-medium">Display Name</h3>
-            <FieldErrorPair>
-              <Field>
-                <input
-                  name="displayName"
-                  placeholder="What do you want to be called?"
-                  onChange={handleInput}
-                />
-              </Field>
-              <FieldErrorList errors={errors.displayName} />
-            </FieldErrorPair>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-medium">Blurb</h3>
-            <FieldErrorPair>
-              <Field>
-                <textarea
-                  name="blurb"
-                  className="block h-36 resize-none"
-                  placeholder="Say something about yourself..."
-                  onChange={handleInput}
-                />
-              </Field>
-              <FieldErrorList errors={errors.blurb} />
-            </FieldErrorPair>
-          </div>
-        </div>
-
-        <button
-          className="text-sm px-6 py-1 min-w-[6rem] w-fit rounded primary-box primary-shadow"
-          onClick={(event) => {
-            event.preventDefault();
-            // TODO: submit!
-          }}
-        >
-          Save
-        </button>
+        <ProfileForm />
       </form>
 
       <form
@@ -141,7 +90,7 @@ export default function Account() {
               onChange={handleInput}
             />
           </Field>
-          <FieldErrorList errors={errors.blurb} />
+          <FieldErrorList errors={errors.newUsername} />
         </FieldErrorPair>
 
         <h3 className="text-sm font-medium">Change Password</h3>
@@ -154,7 +103,7 @@ export default function Account() {
               onChange={handleInput}
             />
           </Field>
-          <FieldErrorList errors={errors.blurb} />
+          <FieldErrorList errors={errors.newPassword} />
         </FieldErrorPair>
 
         <div className="text-sm">
@@ -173,7 +122,7 @@ export default function Account() {
               onChange={handleInput}
             />
           </Field>
-          <FieldErrorList errors={errors.blurb} />
+          <FieldErrorList errors={errors.oldPassword} />
         </FieldErrorPair>
 
         <button
@@ -229,7 +178,7 @@ export default function Account() {
               onChange={handleInput}
             />
           </Field>
-          <FieldErrorList errors={errors.blurb} />
+          <FieldErrorList errors={errors.deletionOldPassword} />
         </FieldErrorPair>
 
         <p className="text-sm text-red-500">
