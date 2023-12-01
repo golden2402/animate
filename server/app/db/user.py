@@ -2,6 +2,7 @@ import db
 from models.watched_anime_model import UpdateWatchedAnime
 from models.rating_model import UpdateRating
 from models.review_model import UpdateReview
+from db.util import get_items_to_update
 
 ##################### FOLLOW #####################################
 
@@ -108,6 +109,14 @@ async def create_watched_anime_relation(watched_anime: UpdateWatchedAnime):
     return (
         await db.run_statements(
             f"insert into watched_anime (user_id, anime_id, watch_count, watch_date, watch_status) values ( '{watched_anime.user_id}', '{watched_anime.anime_id}', '{watched_anime.watch_count}', '{watched_anime.watch_date}', '{watched_anime.watch_status}')"
+        )
+    )[0]
+
+
+async def update_watched_anime_relation(watched_anime: UpdateWatchedAnime):
+    return (
+        await db.run_statements(
+            f"update watched_anime set {get_items_to_update(watched_anime)} where user_id = '{watched_anime.user_id}' and anime_id = '{watched_anime.anime_id}'"
         )
     )[0]
 

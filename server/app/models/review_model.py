@@ -3,21 +3,21 @@ from typing import Optional
 
 
 class Review(BaseModel):
-    user_id: str
+    user_id: int
     post: str
-    anime_id: str
+    anime_id: int
 
 
 class UpdateReview(BaseModel):
-    user_id: Optional[str] = None
+    user_id: Optional[int] = None
     post: Optional[str] = None
-    anime_id: Optional[str] = None
+    anime_id: Optional[int] = None
 
     class Config:
         json_schema_extra = {
             "example": {
-                "user_id": "1",
+                "user_id": 1,
                 "post": "Some Info about the review",
-                "anime_id": "57356",
+                "anime_id": 57356,
             }
         }

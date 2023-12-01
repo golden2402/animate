@@ -16,7 +16,7 @@ class UpdateSeason(BaseModel):
     class Config:
         json_schema_extra = {
             "example": {
-                "id": "1",
+                "id": 1,
                 "season_year": "2023",
                 "season_name": "Season Name",
             }

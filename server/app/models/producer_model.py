@@ -3,14 +3,14 @@ from typing import Optional
 
 
 class Producer(BaseModel):
-    id: str
+    id: int
     studio_name: str
     studio_year: str
     studio_blurb: str
 
 
 class UpdateProducer(BaseModel):
-    id: Optional[str] = None
+    id: Optional[int] = None
     studio_name: Optional[str] = None
     studio_year: Optional[str] = None
     studio_blurb: Optional[str] = None

@@ -3,13 +3,13 @@ from typing import Optional
 
 
 class Genre(BaseModel):
-    id: str
+    id: int
     genre_name: str
 
 
 class UpdateGenre(BaseModel):
-    id: Optional[str] = None
+    id: Optional[int] = None
     genre_name: Optional[str] = None
 
     class Config:
-        json_schema_extra = {"example": {"id": "1", "genre_name": "Genre"}}
+        json_schema_extra = {"example": {"id": 1, "genre_name": "Genre"}}
