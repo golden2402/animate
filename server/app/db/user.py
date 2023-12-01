@@ -107,7 +107,7 @@ async def has_user_watched(user_id: str, anime_id: str):
 async def create_watched_anime_relation(watched_anime: UpdateWatchedAnime):
     return (
         await db.run_statements(
-            f"insert into watched_anime (user_id, anime_id, watch_count, watch_date) values ( '{watched_anime.user_id}', '{watched_anime.anime_id}', '{watched_anime.watch_count}', '{watched_anime.watch_date}')"
+            f"insert into watched_anime (user_id, anime_id, watch_count, watch_date, watch_status) values ( '{watched_anime.user_id}', '{watched_anime.anime_id}', '{watched_anime.watch_count}', '{watched_anime.watch_date}', '{watched_anime.watch_status}')"
         )
     )[0]
 

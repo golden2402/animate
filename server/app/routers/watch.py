@@ -31,11 +31,7 @@ async def delete_all_watched_anime_by_user(user_id: str, response: Response):
 async def watch_anime(watch: UpdateWatchedAnime, response: Response):
     if not await has_user_watched(user_id=watch.user_id, anime_id=watch.anime_id):
         created_obj = await create_watched_anime_relation(watched_anime=watch)
-        if created_obj:
-            response.status_code = 201
-            return created_obj
-        else:
-            response.status_code = 500
+        return ResponseModel(created_obj, "Successfully Created Watch status")
     else:
         response.status_code = 409
         return ErrorResponseModel(
