@@ -44,3 +44,7 @@ async def updater_user_account(user: UpdateUserAccount, id: str):
 # DELETE FROM table_name WHERE condition;
 async def delete_user_account(id: str):
     return await db.run_statements(f"delete from user_account where id = {id}")
+
+
+async def get_all_users():
+    return (await db.run_statements(f"select * from user_account"))[0]
