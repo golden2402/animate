@@ -105,6 +105,8 @@ create table if not exists
   review (
     user_id serial,
     foreign key (user_id) references user_account (id),
+    episode_id serial,
+    foreign key (episode_id) references episode (id),
     post varchar(2047) not null
   );
 

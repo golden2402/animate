@@ -1,6 +1,3 @@
-# from animate.server.app.models.genre_model import UpdateGenre
-# from animate.server.app.models.producer_model import UpdateProducer
-# from animate.server.app.models.season_model import UpdateSeason
 import db
 from models.anime_model import UpdateAnime
 from models.anime_episode_model import UpdateAnimeEpisode
@@ -68,6 +65,10 @@ async def get_episode_by_id(id: str):
 
 async def delete_episode(id: str):
     return await db.run_statements(f"delete from episode where id = {id}")
+
+
+async def get_all_episodes():
+    return (await db.run_statements(f"select * from episode"))[0]
 
 
 ##################### GENRE #####################################
