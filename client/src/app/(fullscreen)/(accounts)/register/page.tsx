@@ -60,7 +60,7 @@ export default function RegisterForm() {
   }
 
   return (
-    <section className="flex flex-col gap-4 p-12">
+    <section className="flex flex-col gap-4 p-12 fg fg-outline fg-shadow">
       <h2 className="text-xl font-medium">Sign Up</h2>
 
       <form className="flex flex-col gap-4">

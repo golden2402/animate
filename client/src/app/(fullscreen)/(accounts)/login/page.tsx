@@ -52,17 +52,8 @@ export default function LoginForm() {
     errorBuilders[field](value);
   }
 
-  // if we have an existing access token, just go back to the home page:
-  (async () => {
-    const { ok: isAuthenticated } = await fetchWithToken("/api/account/login");
-
-    if (isAuthenticated) {
-      router.push("/");
-    }
-  })();
-
   return (
-    <section className="flex flex-col gap-4 p-12">
+    <section className="flex flex-col gap-4 p-12 rounded fg fg-outline fg-shadow">
       <h2 className="text-xl font-medium">Login</h2>
 
       <form className="flex flex-col gap-4">
@@ -138,7 +129,7 @@ export default function LoginForm() {
 
       <div className="text-sm text-center">
         Don&apos;t have an account?&nbsp;
-        <Link className="text-blue-500" href="">
+        <Link className="text-blue-500" href="/register">
           <span>Sign up.</span>
         </Link>
       </div>
