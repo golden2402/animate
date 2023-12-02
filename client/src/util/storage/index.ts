@@ -7,10 +7,13 @@ export function withLocalStorage(fn: (storage: Storage) => any) {
   return null;
 }
 
-export function getStorageItem(key: string) {
+export function getStorageItem(key: string): string | null {
   return withLocalStorage((localStorage) => localStorage.getItem(key));
 }
 
-export function setStorageItem(key: string, value: string) {
+export function setStorageItem(
+  key: string,
+  value: string | null
+): string | null {
   return withLocalStorage((localStorage) => localStorage.setItem(key, value));
 }

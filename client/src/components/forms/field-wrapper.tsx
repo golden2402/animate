@@ -5,7 +5,7 @@ export default function Field({
   className
 }: {
   children: React.ReactNode;
-  className?: string;
+  className?: any;
 }) {
   return (
     <div

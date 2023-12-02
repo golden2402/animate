@@ -5,6 +5,6 @@ import checkRegex from "@/hooks/validation/validators/regex";
 const naiveEmailRegex =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-export default function naiveEmail(message: string) {
-  return checkRegex(naiveEmailRegex, message);
+export default function naiveEmail(message: any) {
+  return checkRegex(naiveEmailRegex, String(message));
 }

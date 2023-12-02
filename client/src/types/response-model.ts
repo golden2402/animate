@@ -1,0 +1,3 @@
+interface ErrorResponseModel {
+  detail: string;
+}
