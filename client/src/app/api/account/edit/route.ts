@@ -16,3 +16,18 @@ export async function POST(request: Request) {
 
   return Response.json(serverErrorResponseModel, { status: 500 });
 }
+
+export async function DELETE(request: Request) {
+  try {
+    return await fetch(apiUrl("/auth/me/delete"), {
+      method: "POST",
+      headers: request.headers
+    });
+  } catch (e: any) {
+    if (e instanceof Error) {
+      console.error(`Route handler threw: ${e}`);
+    }
+  }
+
+  return Response.json(serverErrorResponseModel, { status: 500 });
+}
