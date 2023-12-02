@@ -31,6 +31,10 @@ async def get_anime_by_id(id: str):
     return (await db.run_statements(f"select * from anime where id = '{id}'"))[0]
 
 
+async def get_anime_by_season_id(id: str):
+    return (await db.run_statements(f"select * from anime where season_id = '{id}'"))[0]
+
+
 async def delete_anime(id: str):
     return await db.run_statements(f"delete from anime where id = {id}")
 
@@ -157,6 +161,22 @@ async def create_anime_genre_relationship(anime: UpdateAnime, genre: UpdateGenre
     )
 
 
+async def get_all_anime_by_genre(genre_id: int):
+    return (
+        await db.run_statements(
+            f"select * from anime_genre where genre_id = '{genre_id}'"
+        )
+    )[0]
+
+
+async def get_all_genres_by_anime(anime_id: int):
+    return (
+        await db.run_statements(
+            f"select * from anime_genre where anime_id = '{anime_id}'"
+        )
+    )[0]
+
+
 ##################### ANIME PRODUCER RELATIONSHIP #####################################
 
 
@@ -170,3 +190,19 @@ async def create_anime_producer_relationship(
     return await db.run_statements(
         f"insert into produced_by (anime_id, producer_id) values ( '{anime['id']}', '{producer['id']}')"
     )
+
+
+async def get_all_anime_by_producer(producer_id: str):
+    return (
+        await db.run_statements(
+            f"select * from produced_by where producer_id = '{producer_id}'"
+        )
+    )[0]
+
+
+async def get_all_producers_by_anime(anime_id: str):
+    return (
+        await db.run_statements(
+            f"select * from produced_by where anime_id = '{anime_id}'"
+        )
+    )[0]
