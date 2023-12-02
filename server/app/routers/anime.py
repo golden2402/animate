@@ -11,6 +11,11 @@ async def get_all(request: Request):
     return await get_all_anime()
 
 
+@router.get("/{anime_id}")
+async def get_all(anime_id: int, request: Request):
+    return await get_anime_by_id(anime_id)
+
+
 @router.get("/populate/{page}")
 async def populate(page):
     return await populate_anime(page)
