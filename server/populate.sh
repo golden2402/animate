@@ -1,6 +1,6 @@
 #!/bin/bash   
 
-for (( i = 1031; i >= 250; i-- ));
+for (( i = 249; i >= 1; i-- ));
 do                                                                                                                                                                                  
 curl http://localhost:5000/anime/populate/$i
 done

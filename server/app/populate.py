@@ -23,7 +23,8 @@ async def populate_anime(current_page):
     print(f"Starting PAGE: '{current_page}': '{datetime.now()}'")
     count = 0
     for anime in page_data:
-        anime["title"] = anime["title"].replace("'", "''")
+        if anime["title"]:
+            anime["title"] = anime["title"].replace("'", "''")
         ## season stuffz
         season_dict: UpdateSeason = {
             "season_year": anime["year"],
@@ -61,7 +62,8 @@ async def populate_anime(current_page):
         # Genre stuffz
         genres = anime["genres"]
         for genre in genres:
-            genre["genre_nameitle"] = genre["genre_name"].replace("'", "''")
+            if genre["name"]:
+                genre["name"] = genre["name"].replace("'", "''")
             genre_dict: UpdateGenre = {
                 "id": genre["mal_id"],
                 "genre_name": genre["name"],
@@ -114,12 +116,14 @@ async def populate_anime(current_page):
                     if studio_response_page_data["established"]
                     else date.today(),
                 }
-                studio_dict["studio_blurb"] = studio_dict["studio_blurb"].replace(
-                    "'", "''"
-                )
-                studio_dict["studio_name"] = studio_dict["studio_name"].replace(
-                    "'", "''"
-                )
+                if studio_dict["studio_blurb"]:
+                    studio_dict["studio_blurb"] = studio_dict["studio_blurb"].replace(
+                        "'", "''"
+                    )
+                if studio_dict["studio_name"]:
+                    studio_dict["studio_name"] = studio_dict["studio_name"].replace(
+                        "'", "''"
+                    )
                 # create da producer
                 await create_producer(studio_dict)
 
