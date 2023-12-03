@@ -12,9 +12,11 @@ DB_DSN = f"postgresql://{PG_USER}:{PG_PASSWORD}@database/{PG_DATABASE}"
 async def run_statements(*statements: str):
     results = []
 
-    async with asyncpg.create_pool(dsn=DB_DSN, command_timeout=60) as pool:
-        async with pool.acquire() as connection:
-            for statement in statements:
-                results.append(await connection.fetch(statement))
+    connection = await asyncpg.connect(DB_DSN)
+
+    for statement in statements:
+        results.append(await connection.fetch(statement))
+
+    await connection.close()
 
     return results
