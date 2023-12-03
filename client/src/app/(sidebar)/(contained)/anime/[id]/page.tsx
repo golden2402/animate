@@ -14,7 +14,7 @@ import {
 import { Line } from "react-chartjs-2";
 import "chartjs-adapter-moment";
 
-import { AnimeItemModel, RatingItemResponseModel } from "@/types/data-models";
+import { AnimeItemModel } from "@/types/data-models";
 
 import RatingForm from "./_forms/rating";
 
@@ -214,7 +214,7 @@ export default function AnimeDataPage({
                   >
                     <section className="flex flex-col gap-2">
                       <div className="flex flex-col gap-0.5">
-                        <h2>{review.user_id} says...</h2>
+                        <h2>{review.username} says...</h2>
                         <p className="p-2 text-sm rounded fg-outline">
                           {review.post}
                         </p>
@@ -222,7 +222,7 @@ export default function AnimeDataPage({
 
                       {userRating && (
                         <div>
-                          <h2>{review.user_id}&apos;s rating:</h2>
+                          <h2>{review.username}&apos;s rating:</h2>
                           <p className="text-3xl font-semibold">
                             {userRating.rate_score.toFixed(1)}
                           </p>

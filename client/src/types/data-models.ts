@@ -1,3 +1,13 @@
+export interface UserItemResponseModel {
+  id: number;
+  email: string;
+  username: string;
+  user_password: string;
+  display_name: string;
+  user_color: string;
+  blurb: string;
+}
+
 export interface AnimeItemResponseModel {
   id: number;
   title?: string;
@@ -10,7 +20,7 @@ export interface AnimeItemModel extends AnimeItemResponseModel {
   genres: GenreItemResponseModel[];
   studios: ProducerItemResponseModel[];
   ratings: RatingItemResponseModel[];
-  reviews: ReviewItemResponseModel[];
+  reviews: ReviewItemModel[];
 }
 
 export interface GenreItemResponseModel {
@@ -46,4 +56,8 @@ export interface ReviewItemResponseModel {
   user_id: number;
   anime_id: number;
   post: string;
+}
+
+export interface ReviewItemModel extends ReviewItemResponseModel {
+  username: string;
 }

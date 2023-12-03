@@ -22,10 +22,12 @@ export default function RatingForm({ animeUrlId }: { animeUrlId: number }) {
       (value: string) =>
         value !== "" && isNaN(Number(value)) && "Your score must be a number!",
       (value: string) =>
-        value !== "" && Number(value) < 1 &&
+        value !== "" &&
+        Number(value) < 1 &&
         "Your rating must be greater than 0. It wasn't that bad, was it?",
       (value: string) =>
-        value !== "" && Number(value) > 10 &&
+        value !== "" &&
+        Number(value) > 10 &&
         "Your rating must be 10 or less. Was it really that good?"
     ]
   });

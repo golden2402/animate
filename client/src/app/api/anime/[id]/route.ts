@@ -8,7 +8,9 @@ import {
   GenreItemResponseModel,
   ProducerItemResponseModel,
   RatingItemResponseModel,
-  ReviewItemResponseModel
+  ReviewItemModel,
+  ReviewItemResponseModel,
+  UserItemResponseModel
 } from "@/types/data-models";
 
 const revalidationSettings = {};
@@ -63,20 +65,39 @@ export async function GET(
       );
       const ratingsResponseBody: RatingItemResponseModel[] =
         await ratingsResponse.json();
-
+      
       const reviewsResponse = await fetch(
         apiUrl(`/review/anime/${id}`),
         revalidationSettings
       );
       const reviewsResponseBody: ReviewItemResponseModel[] =
         await reviewsResponse.json();
+      
+      let reviews: ReviewItemModel[] = [];
+      if (reviewsResponseBody) {
+        for (const reviewData of reviewsResponseBody) {
+          const userResponse = await fetch(
+            apiUrl(`/user/${reviewData.user_id}`),
+            revalidationSettings
+          );
+          const userResponseBody: UserItemResponseModel =
+            await userResponse.json();
 
+          if (userResponseBody) {
+            reviews.push({
+              ...reviewData,
+              username: userResponseBody.username
+            });
+          }
+        }
+      }
+      
       const animeFilteredResponse: AnimeItemModel = {
         ...animeItemResponseBody[0],
         genres: genreResponseBody,
         studios: producers,
         ratings: ratingsResponseBody,
-        reviews: reviewsResponseBody
+        reviews: reviews
       };
 
       return Response.json(animeFilteredResponse);
