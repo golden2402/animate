@@ -18,7 +18,7 @@ async def get_all(anime_id: int, request: Request):
 
 @router.get("/{producer_id}")
 async def get_all(producer_id: int, request: Request):
-    return await get_all_anime_by_genre(producer_id=producer_id)
+    return await get_producer_by_id(producer_id)
 
 
 @router.get("/relationships")
