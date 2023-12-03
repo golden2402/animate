@@ -29,6 +29,20 @@ async def delete_rating(rating: UpdateRating, response: Response):
     )
 
 
+@router.post("/force")
+async def force_create_rating(rating: UpdateRating, request: Request, response: Response):
+    if not await has_user_rated_anime(user_id=rating.user_id, anime_id=rating.anime_id):
+        created_obj = await create_rating_raltion(rating=rating)
+        if created_obj:
+            response.status_code = 201
+            return created_obj
+        else:
+            response.status_code = 500
+    else:
+        # should this raise?:
+        response.status_code = 202
+
+
 @router.post("/")
 async def create_rating(rating: UpdateRating, request: Request, response: Response):
     id = authorize_user(request)
