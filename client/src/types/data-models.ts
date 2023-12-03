@@ -8,7 +8,9 @@ export interface AnimeItemResponseModel {
 export interface AnimeItemModel extends AnimeItemResponseModel {
   image?: string;
   genres: GenreItemResponseModel[];
-  producers: ProducerItemResponseModel[];
+  studios: ProducerItemResponseModel[];
+  ratings: RatingItemResponseModel[];
+  reviews: ReviewItemResponseModel[];
 }
 
 export interface GenreItemResponseModel {
@@ -31,4 +33,17 @@ export interface ProducerItemResponseModel {
   studio_name?: string;
   studio_year?: string;
   studio_blurb?: string;
+}
+
+export interface RatingItemResponseModel {
+  user_id: number;
+  anime_id: number;
+  rate_score: number;
+  rate_date: Date;
+}
+
+export interface ReviewItemResponseModel {
+  user_id: number;
+  anime_id: number;
+  post: string;
 }

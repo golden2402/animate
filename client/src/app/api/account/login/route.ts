@@ -1,6 +1,7 @@
 import { apiUrl } from "@/util/api/api-url";
 import serverErrorResponseModel from "@/util/api/error-response";
 
+export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   try {
     return await fetch(apiUrl("/auth/login"), { headers: request.headers });
