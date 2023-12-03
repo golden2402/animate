@@ -25,6 +25,8 @@ async def delete_review(review: UpdateReview, response: Response):
 
 @router.post("/")
 async def create_review(review: UpdateReview, response: Response):
+    review.post = review.post.replace("'", "''")
+    
     if not await has_user_reviewd_anime(
         user_id=review.user_id, anime_id=review.anime_id
     ):
