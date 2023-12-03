@@ -1,6 +1,7 @@
 from models.rating_model import UpdateRating
 from models.response_models import ResponseModel, ErrorResponseModel
-from fastapi import APIRouter, Response
+from routers.auth import authorize_user
+from fastapi import APIRouter, Request, Response, status, HTTPException
 from db.user import *
 
 router = APIRouter()
@@ -29,7 +30,17 @@ async def delete_rating(rating: UpdateRating, response: Response):
 
 
 @router.post("/")
-async def create_rating(rating: UpdateRating, response: Response):
+async def create_rating(rating: UpdateRating, request: Request, response: Response):
+    id = authorize_user(request)
+    if not id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You must be logged in to do this.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    rating.user_id = id
+
     if not await has_user_rated_anime(user_id=rating.user_id, anime_id=rating.anime_id):
         created_obj = await create_rating_raltion(rating=rating)
         if created_obj:
@@ -38,7 +49,5 @@ async def create_rating(rating: UpdateRating, response: Response):
         else:
             response.status_code = 500
     else:
-        response.status_code = 409
-        return ErrorResponseModel(
-            "User has already rated episode",
-        )
+        # should this raise?:
+        response.status_code = 202

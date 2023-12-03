@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 
 import { AnimeItemModel } from "@/types/data-models";
-import Link from "next/link";
+
+import RatingForm from "./_forms/rating";
 
 export default function AnimeDataPage({
   params: { id }
@@ -79,12 +80,20 @@ export default function AnimeDataPage({
                 ) : (
                   <p className="text-sm">
                     Nobody has rated this anime yet!&nbsp;
-                    <Link className="text-blue-500" href="">
-                      Be the first.
-                    </Link>
+                    <span className="text-blue-500">Be the first:</span>
                   </p>
                 )}
               </div>
+
+              <form
+                className="
+                flex flex-col gap-2
+                p-6
+                rounded
+                fg fg-outline"
+              >
+                <RatingForm animeUrlId={id} />
+              </form>
             </section>
           </div>
         </section>
