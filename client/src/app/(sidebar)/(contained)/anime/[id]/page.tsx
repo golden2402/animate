@@ -2,9 +2,32 @@
 
 import { useEffect, useState } from "react";
 
-import { AnimeItemModel } from "@/types/data-models";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  LinearScale,
+  TimeScale,
+  PointElement,
+  LineElement
+} from "chart.js";
+import { Line } from "react-chartjs-2";
+import "chartjs-adapter-moment";
+
+import { AnimeItemModel, RatingItemResponseModel } from "@/types/data-models";
 
 import RatingForm from "./_forms/rating";
+
+ChartJS.register(
+  ArcElement,
+  LineElement,
+  PointElement,
+  Tooltip,
+  LinearScale,
+  TimeScale
+);
+
+const timezoneOffset = new Date().getTimezoneOffset() * 60000;
 
 export default function AnimeDataPage({
   params: { id }
@@ -47,6 +70,35 @@ export default function AnimeDataPage({
     // composed attributes:
     const ratingPopulation = ratings.length;
 
+    const ratingsChartDataMap = ratings
+      .toSorted(
+        ({ rate_date: dateA }, { rate_date: dateB }) =>
+          new Date(dateA).getTime() - new Date(dateB).getTime()
+      )
+      .reduce((map, { rate_date, rate_score }) => {
+        const dateTimestamp = new Date(rate_date).getTime();
+
+        return map.set(dateTimestamp, [
+          ...(map.get(dateTimestamp) || []),
+          {
+            x: dateTimestamp,
+            y: rate_score
+          }
+        ]);
+      }, new Map<number, { x: number; y: number }[]>());
+    const ratingsChartData = Array.from(ratingsChartDataMap.keys())
+      .map((key) => {
+        const dataSet = ratingsChartDataMap.get(key)!;
+
+        return {
+          x: key + timezoneOffset,
+          y:
+            dataSet.reduce((last, dataPoint) => last + dataPoint.y, 0) /
+            dataSet.length
+        };
+      })
+      .filter(Boolean);
+
     return (
       <div className="flex flex-col gap-4">
         <section>
@@ -83,6 +135,41 @@ export default function AnimeDataPage({
                     <span className="text-blue-500">Be the first:</span>
                   </p>
                 )}
+              </div>
+
+              <div>
+                <h2 className="font-medium">Average Rating History</h2>
+                <div className="h-64">
+                  <Line
+                    className="w-full"
+                    data={{
+                      datasets: [
+                        {
+                          label: "Score",
+                          data: ratingsChartData,
+                          tension: 0,
+                          backgroundColor: "#22c55e",
+                          borderColor: "#16a34a"
+                        }
+                      ]
+                    }}
+                    options={{
+                      maintainAspectRatio: false,
+                      scales: {
+                        x: {
+                          type: "time",
+                          time: {
+                            unit: "day"
+                          }
+                        },
+                        y: {
+                          min: 1,
+                          max: 10
+                        }
+                      }
+                    }}
+                  />
+                </div>
               </div>
 
               <form
