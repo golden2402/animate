@@ -11,9 +11,7 @@ import {
   ReviewItemResponseModel
 } from "@/types/data-models";
 
-const revalidationSettings = {
-  next: { revalidate: 10 }
-};
+const revalidationSettings = {};
 
 export const dynamic = "force-dynamic";
 export async function GET(
