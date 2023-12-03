@@ -42,14 +42,14 @@ export default function AnimeDataPage({
       );
     }
 
-    const { title, episodes, ratings } = animeData;
+    const { title, episodes, ratings, reviews } = animeData;
     // composed attributes:
     const ratingPopulation = ratings.length;
 
     return (
       <div className="flex flex-col gap-4">
         <section>
-          <h1>Details</h1>
+          <h1 className="text-xl font-medium">Information</h1>
           <div className="flex flex-col gap-4">
             <section className="flex flex-col gap-4 p-6 rounded fg fg-outline fg-shadow">
               <h1 className="text-3xl font-semibold">{title}</h1>
@@ -85,6 +85,57 @@ export default function AnimeDataPage({
                   </p>
                 )}
               </div>
+            </section>
+          </div>
+        </section>
+
+        <section>
+          <h1 className="text-xl font-medium">Reviews</h1>
+          <div className="flex flex-col gap-4">
+            <section className="flex flex-col gap-4 p-6 rounded fg fg-outline fg-shadow">
+              <div>
+                <h2 className="font-medium">Leave a Review</h2>
+                <p className="text-sm text-neutral-500">
+                  Have you watched {title}? Let everyone know what you thought
+                  about it!
+                </p>
+              </div>
+
+              <div></div>
+            </section>
+
+            <section className="flex flex-col gap-2 p-6 rounded fg fg-outline fg-shadow">
+              <h2>Here&apos;s what everyone is saying:</h2>
+              {reviews.map((review, i) => {
+                const userRating = ratings.find(
+                  (rating) => rating.user_id === review.user_id
+                );
+
+                return (
+                  <div
+                    className="flex flex-col gap-2 p-4 rounded fg fg-outline"
+                    key={`review-card-${i}`}
+                  >
+                    <section className="flex flex-col gap-2">
+                      <div className="flex flex-col gap-0.5">
+                        <h2>{review.user_id} says...</h2>
+                        <p className="p-2 text-sm rounded fg-outline">
+                          {review.post}
+                        </p>
+                      </div>
+
+                      {userRating && (
+                        <div>
+                          <h2>{review.user_id}&apos;s rating:</h2>
+                          <p className="text-3xl font-semibold">
+                            {userRating.rate_score.toFixed(1)}
+                          </p>
+                        </div>
+                      )}
+                    </section>
+                  </div>
+                );
+              })}
             </section>
           </div>
         </section>

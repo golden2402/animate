@@ -12,7 +12,7 @@ import {
 } from "@/types/data-models";
 
 const revalidationSettings = {
-  next: { revalidate: 60 }
+  next: { revalidate: 10 }
 };
 
 export const dynamic = "force-dynamic";
