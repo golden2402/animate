@@ -15,6 +15,7 @@ export interface AnimeItemResponseModel {
   blurb?: string;
   episodes?: number;
   season_id?: number;
+  watched?: boolean
 }
 
 export interface AnimeItemModel extends AnimeItemResponseModel {
@@ -73,4 +74,10 @@ export interface SeasonItemResponseModel {
   id?: number;
   season_year: string;
   season_name: string;
+}
+
+export interface WatchItemResponseModel {
+  user_id?: number;
+  anime_id?: number;
+  watch_date?: string;
 }

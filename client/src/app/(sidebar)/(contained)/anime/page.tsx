@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { AnimeItemModel, SeasonItemResponseModel } from "@/types/data-models"
+import { AnimeItemModel, SeasonItemResponseModel, WatchItemResponseModel } from "@/types/data-models"
+import fetchWithToken from "@/util/api/fetch-with-token";
 
 export default function DisplayAnime() {
     const [seasons, setSeasons] = useState<SeasonItemResponseModel[]>([]);
@@ -49,6 +50,58 @@ export default function DisplayAnime() {
         getAnimeBySeason(temp[0].id)
     }
 
+    function addAnimeToWatchList(anime: AnimeItemModel) {
+        
+        async function watchAnime(watch: WatchItemResponseModel) {
+            const response = await fetchWithToken(`/api/anime/watch`, {
+                headers: {
+                    "content-type": "application/json"
+                  },
+                method: "POST",
+                body: JSON.stringify(watch)
+            });
+
+            if (response.ok) {
+                const tempAnime = animes?.filter(anime2 => {
+                    if (anime.id == anime2.id) {
+                        anime.watched = true
+                    }
+                    return anime2
+                })
+                console.log(tempAnime)
+                setAnimes(tempAnime)
+            }
+        }
+
+
+        async function updateWatch(watch: WatchItemResponseModel) {
+            const response = await fetchWithToken(`/api/anime/watch`, {
+                headers: {
+                    "content-type": "application/json"
+                  },
+                method: "DELETE",
+                body: JSON.stringify(watch)
+            });
+            const tempAnime = animes?.filter(anime2 => {
+                if (anime.id == anime2.id) {
+                    anime.watched = false
+                }
+                return anime2
+            })
+            setAnimes(tempAnime)
+        }
+
+        const watch: WatchItemResponseModel = {
+            anime_id: anime.id,
+            watch_date: new Date().toISOString()
+        }
+        if (anime.watched) {
+            updateWatch(watch)
+        } else {
+            watchAnime(watch)
+        }
+    }
+
     return (
         <div>
             <div className="flex flex-row mx-5">
@@ -68,10 +121,11 @@ export default function DisplayAnime() {
             <div className="flex flex-wrap gap-2 mt-8">
                 {animes?.slice(0, 500).map((anime, i) => {
                     return (
-                        <div key={i} className="items-center flex-col outline-2  bg-neutral-300">
+                        <div key={i} className="items-center flex-col outline-2 bg-neutral-300">
                             <h1 className="text-lg font-bold">{anime.title}</h1>
                             <p className="text-sm font-medium">Episode Count: {anime.episodes ? anime.episodes : "N/A"}</p>
                             <p>{anime.blurb}</p>
+                            <button onClick={() => addAnimeToWatchList(anime)}>{anime.watched ? "Remove From Watched List" : "Add to Watch List"}</button>
                         </div>
                     )
                 })}

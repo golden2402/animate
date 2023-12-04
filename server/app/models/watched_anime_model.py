@@ -13,9 +13,9 @@ class WatchedAnime(BaseModel):
 class UpdateWatchedAnime(BaseModel):
     user_id: Optional[int] = None
     anime_id: Optional[int] = None
-    watch_date: Optional[str] = None
-    watch_count: Optional[int] = None
-    watch_status: Optional[str] = None
+    watch_date: Optional[str] = "2023"
+    watch_count: Optional[int] = 0
+    watch_status: Optional[str] = "watching"
 
     class Config:
         json_schema_extra = {
