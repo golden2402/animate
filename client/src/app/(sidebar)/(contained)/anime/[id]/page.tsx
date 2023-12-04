@@ -303,8 +303,7 @@ export default function AnimeDataPage({
                 })
               ) : (
                 <p className="text-sm text-neutral-500">
-                  Nobody&apos;s made a review yet. Get the first word
-                  in!
+                  Nobody&apos;s made a review yet. Get the first word in!
                 </p>
               )}
             </section>

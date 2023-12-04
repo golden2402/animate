@@ -7,6 +7,11 @@ from db.user import *
 router = APIRouter()
 
 
+@router.get("/")
+async def get_all():
+    return await get_all_ratings()
+
+
 @router.get("/{user_id}")
 async def get_ratings_by_user(user_id: str, response: Response):
     return await get_ratings_by_user_db(user_id=user_id)

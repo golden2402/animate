@@ -65,14 +65,14 @@ export async function GET(
       );
       const ratingsResponseBody: RatingItemResponseModel[] =
         await ratingsResponse.json();
-      
+
       const reviewsResponse = await fetch(
         apiUrl(`/review/anime/${id}`),
         revalidationSettings
       );
       const reviewsResponseBody: ReviewItemResponseModel[] =
         await reviewsResponse.json();
-      
+
       let reviews: ReviewItemModel[] = [];
       if (reviewsResponseBody) {
         for (const reviewData of reviewsResponseBody) {
@@ -91,7 +91,7 @@ export async function GET(
           }
         }
       }
-      
+
       const animeFilteredResponse: AnimeItemModel = {
         ...animeItemResponseBody[0],
         genres: genreResponseBody,

@@ -1,47 +1,47 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react"
 import { AnimeItemModel, SeasonItemResponseModel, WatchItemResponseModel } from "@/types/data-models"
 import fetchWithToken from "@/util/api/fetch-with-token";
 
 export default function DisplayAnime() {
-    const [seasons, setSeasons] = useState<SeasonItemResponseModel[]>([]);
-    const [current, setCurrent] = useState<SeasonItemResponseModel>({
-        season_year: "",
-        season_name: ""
+  const [seasons, setSeasons] = useState<SeasonItemResponseModel[]>([]);
+  const [current, setCurrent] = useState<SeasonItemResponseModel>({
+    season_year: "",
+    season_name: ""
+  });
+  const [animes, setAnimes] = useState<AnimeItemModel[]>();
+
+  useEffect(() => {
+    async function getSeasons() {
+      const response = await fetch(`/api/season`);
+
+      if (response.ok) {
+        setSeasons(await response.json());
+      }
+    }
+
+    async function getAnimes() {
+      const response = await fetch(`/api/anime/`);
+
+      if (response.ok) {
+        setAnimes(await response.json());
+      }
+    }
+    getSeasons();
+    getAnimes();
+  }, []);
+
+  function getAnimeBySeason() {
+    let temp = seasons.filter((season) => {
+      return (
+        season.season_name === current?.season_name &&
+        season.season_year == current?.season_year
+      );
     });
-    const [animes, setAnimes] = useState<AnimeItemModel[]>()
 
-    useEffect(() => {
-        async function getSeasons() {
-            const response = await fetch(`/api/season`);
-
-            if (response.ok) {
-                setSeasons(await response.json());
-            }
-        }
-
-        async function getAnimes() {
-            const response = await fetch(`/api/anime/`);
-
-            if (response.ok) {
-                setAnimes(await response.json());
-            }
-        }
-        getSeasons();
-        getAnimes();
-    }, []);
-
-
-
-    function getAnimeBySeason() {
-        let temp = seasons.filter((season) => {
-            return season.season_name === current?.season_name && season.season_year == current?.season_year
-        })
-        
-
-        async function getAnimeBySeason(id: number | undefined) {
-            const response = await fetch(`/api/anime/seasons/${id}`);
+    async function getAnimeBySeason(id: number | undefined) {
+      const response = await fetch(`/api/anime/seasons/${id}`);
 
             if (response.ok) {
                 setAnimes(await response.json());
@@ -102,19 +102,31 @@ export default function DisplayAnime() {
         }
     }
 
-    return (
-        <div>
-            <div className="flex flex-row mx-5">
-                <input onChange={(e) => setCurrent({
-                    ...current,
-                    season_name: e.target.value
-                })} value={current?.season_name} placeholder="Season Name"></input>
+  return (
+    <div>
+      <div className="flex flex-row mx-5">
+        <input
+          onChange={(e) =>
+            setCurrent({
+              ...current,
+              season_name: e.target.value
+            })
+          }
+          value={current?.season_name}
+          placeholder="Season Name"
+        ></input>
 
-                <input onChange={(e) => setCurrent({
-                    ...current,
-                    season_year: e.target.value
-                })
-                } value={current?.season_year} type="number" placeholder="Season Year"></input>
+        <input
+          onChange={(e) =>
+            setCurrent({
+              ...current,
+              season_year: e.target.value
+            })
+          }
+          value={current?.season_year}
+          type="number"
+          placeholder="Season Year"
+        ></input>
 
                 <button onClick={() => getAnimeBySeason()}>Search</button>
             </div>
