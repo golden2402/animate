@@ -44,6 +44,7 @@ create table if not exists
   anime (
     id integer primary key,
     title varchar(255),
+    blurb varchar(4095),
     episodes smallint,
     season_id integer,
     foreign key (season_id) references season (id) on delete set null
@@ -111,7 +112,7 @@ create table if not exists
     id integer primary key,
     studio_name varchar(80),
     studio_year date,
-    studio_blurb varchar(4093)
+    studio_blurb varchar(4095)
   );
 
 create table if not exists
