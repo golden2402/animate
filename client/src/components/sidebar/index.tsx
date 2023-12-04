@@ -91,7 +91,7 @@ export default function Sidebar() {
         </SidebarCategory>
         <SidebarCategory title="Browse">
           {/* TODO: fill out! */}
-          <SidebarLink href="/">
+          <SidebarLink href="/anime">
             <div className="flex gap-1.5 items-center">
               <FileSearchIcon className="w-5" />
               <p className="text-sm">Anime</p>

@@ -68,3 +68,9 @@ export interface ReviewItemResponseModel {
 export interface ReviewItemModel extends ReviewItemResponseModel {
   username: string;
 }
+
+export interface SeasonItemResponseModel {
+  id?: number;
+  season_year: string;
+  season_name: string;
+}
