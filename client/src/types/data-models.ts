@@ -9,6 +9,10 @@ export interface UserItemResponseModel {
   admin?: boolean;
 }
 
+export interface NamedWatchItemResponseModel extends WatchItemResponseModel {
+  anime_name?: string;
+}
+
 export interface AnimeItemResponseModel {
   id: number;
   title?: string;
@@ -29,6 +33,7 @@ export interface AnimeItemModel extends AnimeItemResponseModel {
 export interface UserDataModel extends UserItemResponseModel {
   ratings: RatingItemResponseModel[];
   reviews: ReviewItemResponseModel[];
+  watchList: NamedWatchItemResponseModel[];
 }
 
 export interface GenreItemResponseModel {

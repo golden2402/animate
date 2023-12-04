@@ -261,6 +261,40 @@ export default function ProfileDataPage({
             </section>
           </div>
         </section>
+
+
+
+        <section>
+          <h1 className="text-xl font-medium">Watch List</h1>
+          <div className="flex flex-col gap-4">
+            <section className="flex flex-col gap-2 p-6 rounded fg fg-outline fg-shadow">
+              <h2>{username}&apos;s Watch List:</h2>
+              {userData.watchList.map((review, i) => {
+                const userRating = ratings.find(
+                  (rating) => rating.user_id === review.user_id
+                );
+
+                return (
+                  <div
+                    className="flex flex-col gap-2 p-4 rounded fg fg-outline"
+                    key={`review-card-${i}`}
+                  >
+                    <section className="flex flex-col gap-2">
+                      <div className="flex flex-col gap-0.5">
+                        <h2>
+                          For <span className="font-bold">{review.anime_name}</span>
+                        </h2>
+                        <p className="p-2 text-sm rounded fg-outline">
+                          {review.watch_date}
+                        </p>
+                      </div>
+                    </section>
+                  </div>
+                );
+              })}
+            </section>
+          </div>
+        </section>
       </div>
     );
   }

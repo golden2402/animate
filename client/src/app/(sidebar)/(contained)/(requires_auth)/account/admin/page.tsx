@@ -17,7 +17,7 @@ export default function AdminPage() {
     getAnime();
   }, []);
   return (
-    <div className="flex items-center">
+    <div className="flex items-center flex-col">
       {users.map((user, i) => {
         function makeAdmin() {
           const adminUsers: UserItemResponseModel[] = users.filter(
@@ -31,7 +31,7 @@ export default function AdminPage() {
           setUsers(adminUsers);
         }
         return (
-          <div key={i} className="flex flex-row">
+          <div key={i} className="flex flex-col">
             <h1 className="flex text-2xl mx-5 text-black font-semibold">
               {user.username}
             </h1>

@@ -22,6 +22,7 @@ export async function GET(
       const userWatchListBody: WatchItemResponseModel[] = await userWatchList.json();
 
       let filteredWatchList: NamedWatchItemResponseModel[] = [];
+      
       for (const watchItem of userWatchListBody) {
         const animeData = await fetch(apiUrl(`/anime/${watchItem.anime_id}`));
         const animeDataBody: AnimeItemResponseModel[] = await animeData.json();
