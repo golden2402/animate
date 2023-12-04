@@ -7,12 +7,15 @@ import {
   ArcElement,
   Tooltip,
   LinearScale,
+  CategoryScale,
   TimeScale,
   PointElement,
-  LineElement
+  LineElement,
+  BarElement
 } from "chart.js";
-import { Line } from "react-chartjs-2";
+import { Bar, Line } from "react-chartjs-2";
 import "chartjs-adapter-moment";
+
 import { UserDataModel } from "@/types/data-models";
 
 ChartJS.register(
@@ -21,6 +24,8 @@ ChartJS.register(
   PointElement,
   Tooltip,
   LinearScale,
+  CategoryScale,
+  BarElement,
   TimeScale
 );
 
@@ -64,8 +69,6 @@ export default function ProfileDataPage({
     }
 
     const { username, user_color, ratings, reviews } = userData;
-    // composed attributes:
-    const ratingPopulation = ratings.length;
 
     const ratingsChartDataMap = ratings
       .toSorted(
@@ -96,7 +99,10 @@ export default function ProfileDataPage({
       })
       .filter(Boolean);
 
-    console.log(user_color);
+    const ratingsBarChartData = ratings.reduce((chartData, rating) => {
+      chartData[Math.floor(rating.rate_score) - 1]++;
+      return chartData;
+    }, Array(10).fill(0));
 
     return (
       <div className="flex flex-col gap-4">
@@ -111,7 +117,8 @@ export default function ProfileDataPage({
 
             <section className="flex flex-col gap-4 p-6 rounded fg fg-outline fg-shadow"></section>
 
-            <section className="flex flex-col gap-4 p-6 rounded fg fg-outline fg-shadow">
+            <section className="flex flex-col gap-4 p-12 rounded fg fg-outline fg-shadow">
+              <h2 className="font-medium">Rating History</h2>
               <div>
                 <h2 className="font-medium">Average Rating History</h2>
                 <div className="h-64">
@@ -142,6 +149,51 @@ export default function ProfileDataPage({
                           max: 10
                         }
                       }
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <h2 className="font-medium">Total Ratings</h2>
+                <div className="h-64">
+                  <Bar
+                    className="w-full"
+                    data={{
+                      labels: Array.from(Array(11).keys()).slice(1),
+                      datasets: [
+                        {
+                          label: "Ratings",
+                          data: ratingsBarChartData,
+                          backgroundColor: [
+                            "#ef4444",
+                            "#ef4444",
+                            "#f97316",
+                            "#f97316",
+                            "#f97316",
+                            "#facc15",
+                            "#facc15",
+                            "#facc15",
+                            "#22c55e",
+                            "#22c55e"
+                          ],
+                          borderColor: [
+                            "#dc2626",
+                            "#dc2626",
+                            "#ea580c",
+                            "#ea580c",
+                            "#ea580c",
+                            "#eab308",
+                            "#eab308",
+                            "#eab308",
+                            "#16a34a",
+                            "#16a34a"
+                          ]
+                        }
+                      ]
+                    }}
+                    options={{
+                      maintainAspectRatio: false
                     }}
                   />
                 </div>
