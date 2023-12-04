@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+
+import { useCallback, useEffect, useState } from "react";
 
 import {
   AnimeItemModel,
@@ -15,10 +17,15 @@ import joinClasses from "@/util/join-classes";
 import fetchWithToken from "@/util/api/fetch-with-token";
 
 export default function DisplayAnime() {
+  const searchParams = useSearchParams();
+
+  const name = searchParams.get("name");
+  const year = searchParams.get("year");
+
   const [seasons, setSeasons] = useState<SeasonItemResponseModel[]>([]);
   const [current, setCurrent] = useState<SeasonItemResponseModel>({
-    season_year: "",
-    season_name: ""
+    season_year: year || "",
+    season_name: name || ""
   });
   const [animes, setAnimes] = useState<AnimeItemModel[]>();
 
@@ -38,11 +45,12 @@ export default function DisplayAnime() {
         setAnimes(await response.json());
       }
     }
+
     getSeasons();
     getAnimes();
   }, []);
 
-  function getAnimeBySeason() {
+  const getAnimeBySeason = useCallback(() => {
     let temp = seasons.filter((season) => {
       return (
         season.season_name === current?.season_name &&
@@ -57,8 +65,17 @@ export default function DisplayAnime() {
         setAnimes(await response.json());
       }
     }
-    getAnimeBySeason(temp[0].id);
-  }
+
+    if (temp && temp.length > 0) {
+      getAnimeBySeason(temp[0].id);
+    }
+  }, [current?.season_name, current?.season_year, seasons]);
+
+  useEffect(() => {
+    if (name || year) {
+      getAnimeBySeason();
+    }
+  }, [getAnimeBySeason, name, year])
 
   function addAnimeToWatchList(anime: AnimeItemModel) {
     async function watchAnime(watch: WatchItemResponseModel) {
@@ -149,7 +166,10 @@ export default function DisplayAnime() {
           </div>
         </div>
 
-        <button className="flex items-center gap-1 py-1 px-2 rounded bg-blue-500 text-neutral-100 outline outline-1 outline-black/20 text-sm font-medium" onClick={() => getAnimeBySeason()}>
+        <button
+          className="flex items-center gap-1 py-1 px-2 rounded bg-blue-500 text-neutral-100 outline outline-1 outline-black/20 text-sm font-medium"
+          onClick={() => getAnimeBySeason()}
+        >
           <p>Search</p>
           <SearchIcon className="w-5" />
         </button>
@@ -164,7 +184,9 @@ export default function DisplayAnime() {
             >
               <div>
                 <Link href={`/anime/${anime.id}`}>
-                  <h1 className="text-xl font-semibold underline">{anime.title}</h1>
+                  <h1 className="text-xl font-semibold underline">
+                    {anime.title}
+                  </h1>
                 </Link>
                 <p className="text-sm font-medium">
                   Episodes: {anime.episodes ? anime.episodes : "N/A"}
