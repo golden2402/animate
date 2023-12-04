@@ -1,4 +1,4 @@
-import { UserDataModel, UserItemResponseModel } from "@/types/data-models";
+import { AnimeItemResponseModel, NamedWatchItemResponseModel, UserDataModel, UserItemResponseModel, WatchItemResponseModel } from "@/types/data-models";
 import { apiUrl } from "@/util/api/api-url";
 import serverErrorResponseModel from "@/util/api/error-response";
 
@@ -18,10 +18,27 @@ export async function GET(
       const userRatings = await fetch(apiUrl(`/rating/${id}`));
       const userRatingsBody = await userRatings.json();
 
+      const userWatchList = await fetch(apiUrl(`/watch/${id}`));
+      const userWatchListBody: WatchItemResponseModel[] = await userWatchList.json();
+
+      let filteredWatchList: NamedWatchItemResponseModel[] = [];
+      for (const watchItem of userWatchListBody) {
+        const animeData = await fetch(apiUrl(`/anime/${watchItem.anime_id}`));
+        const animeDataBody: AnimeItemResponseModel[] = await animeData.json();
+
+        if (animeDataBody) {
+          filteredWatchList.push({
+            ...watchItem,
+            anime_name: animeDataBody[0].title
+          });
+        }
+      }
+
       const filteredResponse: UserDataModel = {
         ...userDataBody,
         reviews: userReviewsBody,
-        ratings: userRatingsBody
+        ratings: userRatingsBody,
+        watchList: filteredWatchList,
       };
 
       return Response.json(filteredResponse);
