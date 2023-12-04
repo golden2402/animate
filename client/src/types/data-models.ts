@@ -6,6 +6,7 @@ export interface UserItemResponseModel {
   display_name: string;
   user_color: string;
   blurb: string;
+  admin?: boolean
 }
 
 export interface AnimeItemResponseModel {
