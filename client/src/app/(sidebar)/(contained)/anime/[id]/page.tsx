@@ -7,11 +7,13 @@ import {
   ArcElement,
   Tooltip,
   LinearScale,
+  CategoryScale,
   TimeScale,
   PointElement,
-  LineElement
+  LineElement,
+  BarElement
 } from "chart.js";
-import { Line } from "react-chartjs-2";
+import { Bar, Line } from "react-chartjs-2";
 import "chartjs-adapter-moment";
 
 import { AnimeItemModel } from "@/types/data-models";
@@ -25,6 +27,8 @@ ChartJS.register(
   PointElement,
   Tooltip,
   LinearScale,
+  CategoryScale,
+  BarElement,
   TimeScale
 );
 
@@ -87,7 +91,7 @@ export default function AnimeDataPage({
           }
         ]);
       }, new Map<number, { x: number; y: number }[]>());
-    const ratingsChartData = Array.from(ratingsChartDataMap.keys())
+    const ratingsLineChartData = Array.from(ratingsChartDataMap.keys())
       .map((key) => {
         const dataSet = ratingsChartDataMap.get(key)!;
 
@@ -99,6 +103,11 @@ export default function AnimeDataPage({
         };
       })
       .filter(Boolean);
+
+    const ratingsBarChartData = ratings.reduce((chartData, rating) => {
+      chartData[Math.floor(rating.rate_score) - 1]++;
+      return chartData;
+    }, Array(10).fill(0));
 
     return (
       <div className="flex flex-col gap-4">
@@ -147,7 +156,7 @@ export default function AnimeDataPage({
                       datasets: [
                         {
                           label: "Score",
-                          data: ratingsChartData,
+                          data: ratingsLineChartData,
                           tension: 0,
                           backgroundColor: "#22c55e",
                           borderColor: "#16a34a"
@@ -168,6 +177,51 @@ export default function AnimeDataPage({
                           max: 10
                         }
                       }
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <h2 className="font-medium">Total Ratings</h2>
+                <div className="h-64">
+                  <Bar
+                    className="w-full"
+                    data={{
+                      labels: Array.from(Array(11).keys()).slice(1),
+                      datasets: [
+                        {
+                          label: "Ratings",
+                          data: ratingsBarChartData,
+                          backgroundColor: [
+                            "#ef4444",
+                            "#ef4444",
+                            "#f97316",
+                            "#f97316",
+                            "#f97316",
+                            "#facc15",
+                            "#facc15",
+                            "#facc15",
+                            "#22c55e",
+                            "#22c55e"
+                          ],
+                          borderColor: [
+                            "#dc2626",
+                            "#dc2626",
+                            "#ea580c",
+                            "#ea580c",
+                            "#ea580c",
+                            "#eab308",
+                            "#eab308",
+                            "#eab308",
+                            "#16a34a",
+                            "#16a34a"
+                          ]
+                        }
+                      ]
+                    }}
+                    options={{
+                      maintainAspectRatio: false
                     }}
                   />
                 </div>
