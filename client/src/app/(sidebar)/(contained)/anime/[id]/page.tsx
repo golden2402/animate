@@ -71,7 +71,7 @@ export default function AnimeDataPage({
       );
     }
 
-    const { title, episodes, ratings, reviews } = animeData;
+    const { title, blurb, episodes, ratings, reviews } = animeData;
     // composed attributes:
     const ratingPopulation = ratings.length;
 
@@ -116,6 +116,12 @@ export default function AnimeDataPage({
           <div className="flex flex-col gap-4">
             <section className="flex flex-col gap-4 p-6 rounded fg fg-outline fg-shadow">
               <h1 className="text-3xl font-semibold">{title}</h1>
+
+              <div>
+                <h2 className="font-medium">Synopsis</h2>
+                <p className="text-sm text-neutral-500">{blurb || "N/A"}</p>
+              </div>
+
               <div>
                 <h2 className="font-medium">Episodes</h2>
                 <p className="text-sm text-neutral-500">{episodes || "N/A"}</p>
@@ -140,9 +146,8 @@ export default function AnimeDataPage({
                     </p>
                   </>
                 ) : (
-                  <p className="text-sm">
-                    Nobody has rated this anime yet!&nbsp;
-                    <span className="text-blue-500">Be the first:</span>
+                  <p className="text-sm text-neutral-500">
+                    Nobody has rated this anime yet! Want to be the first?
                   </p>
                 )}
               </div>
@@ -265,36 +270,43 @@ export default function AnimeDataPage({
 
             <section className="flex flex-col gap-2 p-6 rounded fg fg-outline fg-shadow">
               <h2>Here&apos;s what everyone is saying:</h2>
-              {reviews.map((review, i) => {
-                const userRating = ratings.find(
-                  (rating) => rating.user_id === review.user_id
-                );
+              {reviews.length > 0 ? (
+                reviews.map((review, i) => {
+                  const userRating = ratings.find(
+                    (rating) => rating.user_id === review.user_id
+                  );
 
-                return (
-                  <div
-                    className="flex flex-col gap-2 p-4 rounded fg fg-outline"
-                    key={`review-card-${i}`}
-                  >
-                    <section className="flex flex-col gap-2">
-                      <div className="flex flex-col gap-0.5">
-                        <h2>{review.username} says...</h2>
-                        <p className="p-2 text-sm rounded fg-outline">
-                          {review.post}
-                        </p>
-                      </div>
-
-                      {userRating && (
-                        <div>
-                          <h2>{review.username}&apos;s rating:</h2>
-                          <p className="text-3xl font-semibold">
-                            {userRating.rate_score.toFixed(1)}
+                  return (
+                    <div
+                      className="flex flex-col gap-2 p-4 rounded fg fg-outline"
+                      key={`review-card-${i}`}
+                    >
+                      <section className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-0.5">
+                          <h2>{review.username} says...</h2>
+                          <p className="p-2 text-sm rounded fg-outline">
+                            {review.post}
                           </p>
                         </div>
-                      )}
-                    </section>
-                  </div>
-                );
-              })}
+
+                        {userRating && (
+                          <div>
+                            <h2>{review.username}&apos;s rating:</h2>
+                            <p className="text-3xl font-semibold">
+                              {userRating.rate_score.toFixed(1)}
+                            </p>
+                          </div>
+                        )}
+                      </section>
+                    </div>
+                  );
+                })
+              ) : (
+                <p className="text-sm text-neutral-500">
+                  Nobody&apos;s made a review yet. Get the first word
+                  in!
+                </p>
+              )}
             </section>
           </div>
         </section>
