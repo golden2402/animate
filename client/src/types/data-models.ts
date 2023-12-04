@@ -23,6 +23,11 @@ export interface AnimeItemModel extends AnimeItemResponseModel {
   reviews: ReviewItemModel[];
 }
 
+export interface UserDataModel extends UserItemResponseModel {
+  ratings: RatingItemResponseModel[];
+  reviews: ReviewItemResponseModel[];
+}
+
 export interface GenreItemResponseModel {
   id: number;
   genre_name: string;
