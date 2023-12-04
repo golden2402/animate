@@ -68,7 +68,11 @@ export default function ProfileDataPage({
       );
     }
 
-    const { username, user_color, ratings, reviews } = userData;
+    const { username, display_name, blurb, user_color, ratings, reviews } =
+      userData;
+    // because asyncpg keeps giving me "None" as a string, so just force over
+    // it:
+    const fixedDisplayName = display_name === "None" ? null : display_name;
 
     const ratingsChartDataMap = ratings
       .toSorted(
@@ -115,7 +119,22 @@ export default function ProfileDataPage({
               style={{ backgroundColor: `#${user_color}` }}
             />
 
-            <section className="flex flex-col gap-4 p-6 rounded fg fg-outline fg-shadow"></section>
+            <section className="flex flex-col gap-4 p-6 rounded fg fg-outline fg-shadow">
+              <div>
+                <h1 className="text-2xl font-semibold">
+                  {fixedDisplayName || username}
+                </h1>
+                {fixedDisplayName && (
+                  <p className="text-sm text-neutral-500">{username}</p>
+                )}
+              </div>
+
+              {blurb && (
+                <div>
+                  <p className="p-2 text-sm rounded fg-outline">{blurb}</p>
+                </div>
+              )}
+            </section>
 
             <section className="flex flex-col gap-4 p-12 rounded fg fg-outline fg-shadow">
               <h2 className="font-medium">Rating History</h2>
