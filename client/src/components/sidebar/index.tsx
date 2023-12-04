@@ -58,7 +58,7 @@ export default function Sidebar() {
       {/* navigation: */}
       <nav className="flex flex-col gap-4 p-4">
         {/* search: */}
-        <div
+        {/* <div
           className="
           flex justify-between gap-1 items-center
           p-1
@@ -70,7 +70,7 @@ export default function Sidebar() {
             placeholder="Search"
           />
           <SearchIcon className="w-5" />
-        </div>
+        </div> */}
 
         {/* quick access (home): */}
         <SidebarLink href="/">
@@ -82,7 +82,7 @@ export default function Sidebar() {
 
         {/* categories: */}
         <SidebarCategory title="Featured">
-          <SidebarLink href="/season">
+          <SidebarLink href="/anime?name=fall&year=2023">
             <div className="flex gap-1.5 items-center">
               <StarIcon className="w-5" />
               <p className="text-sm">Fall 2023</p>
@@ -97,7 +97,7 @@ export default function Sidebar() {
               <p className="text-sm">Anime</p>
             </div>
           </SidebarLink>
-          <SidebarLink href="/">
+          {/* <SidebarLink href="/">
             <div className="flex gap-1.5 items-center">
               <FolderIcon className="w-5" />
               <p className="text-sm">Seasons</p>
@@ -108,7 +108,7 @@ export default function Sidebar() {
               <TagIcon className="w-5" />
               <p className="text-sm">Genres</p>
             </div>
-          </SidebarLink>
+          </SidebarLink> */}
         </SidebarCategory>
       </nav>
 
