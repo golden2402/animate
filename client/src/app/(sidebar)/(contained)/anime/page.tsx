@@ -68,7 +68,7 @@ export default function DisplayAnime() {
             <div className="flex flex-wrap gap-2 mt-8">
                 {animes?.slice(0, 500).map((anime, i) => {
                     return (
-                        <div key={i} className="items-center flex-col outline-2  bg-neutral-300 w-44 h-40">
+                        <div key={i} className="items-center flex-col outline-2  bg-neutral-300">
                             <h1 className="text-lg font-bold">{anime.title}</h1>
                             <p className="text-sm font-medium">Episode Count: {anime.episodes ? anime.episodes : "N/A"}</p>
                             <p>{anime.blurb}</p>
