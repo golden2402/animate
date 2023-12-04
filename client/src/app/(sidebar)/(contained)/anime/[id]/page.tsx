@@ -17,6 +17,7 @@ import "chartjs-adapter-moment";
 import { AnimeItemModel } from "@/types/data-models";
 
 import RatingForm from "./_forms/rating";
+import ReviewForm from "./_forms/review";
 
 ChartJS.register(
   ArcElement,
@@ -197,7 +198,15 @@ export default function AnimeDataPage({
                 </p>
               </div>
 
-              <div></div>
+              <form
+                className="
+                flex flex-col gap-2
+                p-6
+                rounded
+                fg fg-outline"
+              >
+                <ReviewForm animeUrlId={id} />
+              </form>
             </section>
 
             <section className="flex flex-col gap-2 p-6 rounded fg fg-outline fg-shadow">

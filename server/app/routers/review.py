@@ -1,6 +1,7 @@
 from models.review_model import UpdateReview
 from models.response_models import ResponseModel, ErrorResponseModel
-from fastapi import APIRouter, Response
+from routers.auth import authorize_user
+from fastapi import APIRouter, Request, Response, status, HTTPException
 from db.user import *
 
 router = APIRouter()
@@ -24,9 +25,19 @@ async def delete_review(review: UpdateReview, response: Response):
 
 
 @router.post("/")
-async def create_review(review: UpdateReview, response: Response):
+async def create_review(review: UpdateReview, request: Request, response: Response):
     review.post = review.post.replace("'", "''")
+
+    id = authorize_user(request)
+    if not id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You must be logged in to do this.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     
+    review.user_id = id
+
     if not await has_user_reviewd_anime(
         user_id=review.user_id, anime_id=review.anime_id
     ):
