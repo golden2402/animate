@@ -16,7 +16,7 @@ async def create_anime(anime: UpdateAnime):
     if anime["season_id"]:
         return (
             await db.run_statements(
-                f"insert into anime (id, title, episodes,  season_id) values ( '{anime['id']}', '{anime['title']}', '{anime['episodes']}','{anime['season_id']}')"
+                f"insert into anime (id, title, blurb, episodes, season_id) values ( '{anime['id']}', '{anime['title']}', '{anime['blurb']}', '{anime['episodes']}', '{anime['season_id']}')"
             )
         )[0]
     else:

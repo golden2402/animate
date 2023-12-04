@@ -12,6 +12,7 @@ class Anime(BaseModel):
 class UpdateAnime(BaseModel):
     id: Optional[str] = None
     title: Optional[str] = None
+    blurb: Optional[str] = None
     episodes: Optional[int] = None
     season_id: Optional[int] = None
 
@@ -20,6 +21,7 @@ class UpdateAnime(BaseModel):
             "example": {
                 "id": 1,
                 "title": "This is a title",
+                "blurb": "This is a blurb",
                 "episodes": 5,
                 "season_id": 1,
             }

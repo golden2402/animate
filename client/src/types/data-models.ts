@@ -6,12 +6,13 @@ export interface UserItemResponseModel {
   display_name: string;
   user_color: string;
   blurb: string;
-  admin?: boolean
+  admin?: boolean;
 }
 
 export interface AnimeItemResponseModel {
   id: number;
   title?: string;
+  blurb?: string;
   episodes?: number;
   season_id?: number;
 }

@@ -25,6 +25,10 @@ async def populate_anime(current_page):
     for anime in page_data:
         if anime["title"]:
             anime["title"] = anime["title"].replace("'", "''")
+            
+        if anime["synopsis"]:
+            anime["synopsis"] = anime["synopsis"].replace("'", "''")
+
         ## season stuffz
         season_dict: UpdateSeason = {
             "season_year": anime["year"],
@@ -49,6 +53,7 @@ async def populate_anime(current_page):
         anime_dict: UpdateAnime = {
             "id": anime["mal_id"],
             "title": anime["title"],
+            "blurb": anime["synopsis"],
             "episodes": anime["episodes"] if anime["episodes"] else 0,
             "season_id": season["id"] if season and season["id"] else None,
         }
